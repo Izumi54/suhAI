@@ -577,6 +577,90 @@ footer .flex a:hover svg {
     transform: scale(1.2) rotate(5deg);
 }
 
+/* Temperature-based Backgrounds */
+.temp-hot {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 25%, #FF6B6B 50%, #FF4757 75%, #FF3742 100%) !important;
+}
+
+.temp-warm {
+    background: linear-gradient(135deg, #FFEAA7 0%, #FFD93D 25%, #FFB74D 50%, #FF8A65 75%, #FF7043 100%) !important;
+}
+
+.temp-cool {
+    background: linear-gradient(135deg, #74B9FF 0%, #0984E3 25%, #6C5CE7 50%, #A29BFE 75%, #FD79A8 100%) !important;
+}
+
+.temp-cold {
+    background: linear-gradient(135deg, #00B894 0%, #00CEC9 25%, #74B9FF 50%, #0984E3 75%, #6C5CE7 100%) !important;
+}
+
+/* Search Input Styles */
+#weatherSearch, #mobileWeatherSearch {
+    transition: all 0.3s ease;
+}
+
+#weatherSearch:focus, #mobileWeatherSearch:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Search Suggestions */
+#searchSuggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#searchSuggestions::-webkit-scrollbar {
+    width: 4px;
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+/* Search Button Hover Effects */
+#searchBtn, #mobileSearchBtn, #locationBtn, #mobileLocationBtn {
+    transition: all 0.2s ease;
+}
+
+#searchBtn:hover, #mobileSearchBtn:hover, #locationBtn:hover, #mobileLocationBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* Temperature Conversion Button */
+#tempConvertBtn, #mobileTempConvertBtn {
+    transition: all 0.2s ease;
+}
+
+#tempConvertBtn:hover, #mobileTempConvertBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* Extreme Weather Warning Animation */
+.warning {
+    animation: shake 0.3s ease-in-out 2;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Extreme Weather Alert */
+.extreme-weather-alert {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
 /* Mobile Optimizations */
 @media (max-width: 767px) {
     .section {
@@ -600,5 +684,10 @@ footer .flex a:hover svg {
     footer .grid {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+    
+    /* Mobile Search */
+    #mobileWeatherSearch {
+        font-size: 16px; /* Prevents zoom on iOS */
     }
 }
