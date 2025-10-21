@@ -110,6 +110,7 @@ const Navigation = {
         });
     },
     
+    
     navigateToSection(section) {
         this.currentSection = section;
         const targetElement = document.getElementById(section + 'Section');

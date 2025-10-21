@@ -26,6 +26,7 @@ const ChatAI = {
         };
     },
     
+    
     setupEventListeners() {
         // Toggle chat window
         this.elements.chatToggle.addEventListener('click', () => {

@@ -10,6 +10,7 @@ const WeatherApp = {
         this.simulateWeatherUpdates();
     },
     
+    
     setupEventListeners() {
         // Scroll spy for navigation
         window.addEventListener('scroll', () => {
