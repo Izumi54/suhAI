@@ -1,6 +1,6 @@
 // Weather Backend - Based on friend's script.js
 // Robust weather functionality with proper error handling
-
+export const WeatherAPIKey = "ec86397cb0624a28b0b153411251410";
 class WeatherBackend {
     constructor() {
         this.API_KEY = "ec86397cb0624a28b0b153411251410";
@@ -134,6 +134,10 @@ class WeatherBackend {
         tempElements.forEach(el => {
             if (el) el.textContent = `${Math.round(data.current.temp_c)}°`;
         });
+        const text = document.getElementById('textRamalan')
+        if(this.currentCity){
+            text.textContent = `Ramalan cuaca untuk ${this.currentCity}`
+        }
 
         // Update weather condition
         const conditionElements = document.querySelectorAll('#weatherCondition, #weatherConditionMobile');
@@ -178,7 +182,7 @@ class WeatherBackend {
         });
 
         // Update location name in header
-        const locationElements = document.querySelectorAll('p.text-white.text-sm.opacity-80');
+        const locationElements = document.querySelectorAll('p.text-mode.text-sm.opacity-80');
         locationElements.forEach(el => {
             if (el) el.textContent = data.location.name;
         });
@@ -220,7 +224,7 @@ class WeatherBackend {
 
     showExtremeWeatherAlert() {
         const alertDiv = document.createElement('div');
-        alertDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg animate-pulse';
+        alertDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-mode px-6 py-4 rounded-lg shadow-lg animate-pulse';
         alertDiv.innerHTML = `
             <div class="flex items-center space-x-2">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -338,7 +342,7 @@ class WeatherBackend {
         // Add visual loading indicator
         const loadingDiv = document.createElement('div');
         loadingDiv.id = 'weatherLoading';
-        loadingDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg';
+        loadingDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-blue-500 text-mode px-4 py-2 rounded-lg shadow-lg';
         loadingDiv.innerHTML = '🔄 Memuat data cuaca...';
         document.body.appendChild(loadingDiv);
     }
@@ -356,7 +360,7 @@ class WeatherBackend {
         
         // Show error notification instead of alert
         const errorDiv = document.createElement('div');
-        errorDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg';
+        errorDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-red-500 text-mode px-6 py-4 rounded-lg shadow-lg';
         errorDiv.innerHTML = `
             <div class="flex items-center space-x-2">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -388,4 +392,13 @@ class WeatherBackend {
 // Initialize weather backend when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.weatherBackend = new WeatherBackend();
+
 });
+
+setInterval(() => {
+     if (window.weatherBackend && window.weatherBackend.currentCity) {
+            console.log("⏳ Auto-refreshing weather data...");
+            window.weatherBackend.refreshWeather();
+        }
+    }, 300000);
+
