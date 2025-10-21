@@ -1,0 +1,44 @@
+{
+  "name": "weather-ai-website",
+  "version": "1.0.0",
+  "description": "Website cuaca interaktif dengan desain glassmorphism dan AI recommendations",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'Open index.html in your browser to view the website'",
+    "dev": "echo 'Open index.html in your browser to view the website'",
+    "build": "echo 'No build process needed for static files'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "weather",
+    "ai",
+    "glassmorphism",
+    "responsive",
+    "tailwind",
+    "javascript",
+    "html",
+    "css"
+  ],
+  "author": "Weather AI Team",
+  "license": "MIT",
+  "dependencies": {
+    "tailwindcss": "^3.3.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/weather-ai-website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/weather-ai-website/issues"
+  },
+  "homepage": "https://github.com/yourusername/weather-ai-website#readme",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
