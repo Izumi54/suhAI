@@ -192,7 +192,7 @@ class WeatherBackend {
     pressureElements.forEach((el) => {
       if (el) el.textContent = `${data.current.pressure_mb} hPa`;
     });
-
+ 
     // Update visibility
     const visibilityElements = document.querySelectorAll("#visibility");
     console.log("📏 Visibilitas dari API:", data.current.vis_km);
