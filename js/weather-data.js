@@ -1,5 +1,5 @@
 import { WeatherAPIKey } from "./weather-backend.js";
-const apikey = WeatherAPIKey;
+
 // Weather Data Management
 const WeatherData = {
   current: {
@@ -11,7 +11,7 @@ const WeatherData = {
     windSpeed: 12,
     location: "Jepara",
     pressure: 1013,
-    visibility: 10,
+    visibility: 5,
     airQuality: "Baik",
   },
   forecast: [
@@ -323,7 +323,7 @@ const UIComponents = {
       if (modal.parentElement) {
         modal.remove();
       }
-    }, 5000);
+    }, 2000);
   },
 };
 
@@ -336,6 +336,13 @@ const ForecastRenderer = {
     container.innerHTML = ""; // Bersihkan dulu
     WeatherData.forecast.forEach((dayData) => {
       const card = UIComponents.createWeatherCard(dayData);
+        if (window.WeatherApp && typeof WeatherApp.showForecastDetail === 'function') {
+      card.addEventListener('click', () => {
+        WeatherApp.showForecastDetail(dayData);
+      });
+    } else {
+      console.warn("WeatherApp belum terdeteksi — mini chart tidak bisa ditampilkan");
+    }
       container.appendChild(card);
     });
   },
@@ -419,24 +426,89 @@ const ChartManager = {
     container.innerHTML = chartHtml;
   },
 };
-// 🔥 Fungsi untuk inisialisasi awal data cuaca default
-async function initDefaultWeather() {
-  const lastCity = localStorage.getItem("lastCity") || "Jepara";
-  await fetchForecast(lastCity);
-  console.log(`Cuaca awal untuk: ${lastCity}`);
-}
+
 
 // Initialize Application
 document.addEventListener("DOMContentLoaded", async function () {
+// Dengarkan event dari weather-backend.js
+window.addEventListener("weather-updated", async (event) => {
+  const { city, data } = event.detail;
+  const pressure = data.current.pressure_mb;
+
+  const pressureEl = document.getElementById("pressure");
+  if (pressureEl) {
+    pressureEl.textContent = `${pressure} hPa`;
+  }
+  console.log("Data baru diterima dari backend:", city, data);
+
+  // Update data utama
+  WeatherData.current = {
+    temperature: Math.round(data.current.temp_c),
+    condition: data.current.condition.text,
+    feelsLike: Math.round(data.current.feelslike_c),
+    humidity: data.current.humidity,
+    uvIndex: data.current.uv,
+    windSpeed: data.current.wind_kph,
+    location: data.location.name,
+    pressure: data.current.pressure_mb,
+    visibility: data.current.vis_km,
+    airQuality: "Baik",
+  };
+
+  // Ambil forecast terbaru
+  const apikey = WeatherAPIKey;
+  const forecastResponse = await fetch(
+    `https://api.weatherapi.com/v1/forecast.json?key=${apikey}&q=${encodeURIComponent(city)}&days=7&lang=id`
+  );
+  const forecastData = await forecastResponse.json();
+
+  WeatherData.forecast = forecastData.forecast.forecastday.map((day) => ({
+    day: new Date(day.date).toLocaleDateString("id-ID", { weekday: "long" }),
+    date: new Date(day.date).toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "short",
+    }),
+    high: Math.round(day.day.maxtemp_c),
+    low: Math.round(day.day.mintemp_c),
+    condition: day.day.condition.text,
+    icon: day.day.daily_chance_of_rain > 50 ? "🌧️" : "☀️",
+    precipitation: day.day.daily_chance_of_rain,
+    wind: Math.round(day.day.maxwind_kph),
+  }));
+
+  // Render ulang semua tampilan
+  ForecastRenderer.renderForecast("forecastList");
+  setTimeout(() => {
+    window.ChartManager.createTemperatureChart("temperatureChart");
+    window.ChartManager.createPrecipitationChart("precipitationChart");
+  }, 300);
+
+  if (window.WeatherApp) {
+    WeatherApp.generateRecommendationsSection();
+    WeatherApp.generateHeatmapSection();
+  }
+  // Update grafik setelah data baru diterima
+
+
+});
+
+
   Navigation.init();
 
-  //Ambil cuaca default (Jepara / lastCity)
-  await initDefaultWeather();
+
 
   // Render ulang semua setelah data masuk
   ForecastRenderer.renderForecast("forecastList");
   ChartManager.createTemperatureChart("temperatureChart");
   ChartManager.createPrecipitationChart("precipitationChart");
+
+
+  if(window.WeatherApp){
+    WeatherApp.generateRecommendationsSection();
+    WeatherApp.generateHeatmapSection();
+  } else {
+  console.warn("WeatherApp belum terdeteksi. Rekomendasi & heatmap dilewati sementara.");
+}
 
   // Input kota manual
   const searchInput = document.getElementById("weatherSearch");
@@ -459,51 +531,7 @@ window.WeatherData = WeatherData;
 window.Navigation = Navigation;
 window.UIComponents = UIComponents;
 window.ChartManager = ChartManager;
-// Ambil data prakiraan cuaca dari WeatherAPI
-async function fetchForecast(city) {
-  // ganti dengan API key kamu dari weatherapi.com
 
-  if (!city || city.trim() === "") return;
 
-  const url = `https://api.weatherapi.com/v1/forecast.json?key=${apikey}&q=${encodeURIComponent(
-    city
-  )}&days=7&lang=id`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Gagal mengambil data prakiraan cuaca.");
 
-    const data = await response.json();
-
-    // Simpan ke WeatherData
-    WeatherData.forecast = data.forecast.forecastday.map((day) => ({
-      day: new Date(day.date).toLocaleDateString("id-ID", { weekday: "long" }),
-      date: new Date(day.date).toLocaleDateString("id-ID", {
-        day: "2-digit",
-        month: "short",
-      }),
-      high: Math.round(day.day.maxtemp_c),
-      low: Math.round(day.day.mintemp_c),
-      condition: day.day.condition.text,
-      icon: getWeatherEmoji(day.day.condition.text),
-      precipitation: day.day.daily_chance_of_rain,
-      wind: Math.round(day.day.maxwind_kph),
-    }));
-
-    // Render ulang tampilan prakiraan
-    ForecastRenderer.renderForecast("forecastList");
-    ChartManager.createTemperatureChart("temperatureChart");
-    ChartManager.createPrecipitationChart("precipitationChart");
-  } catch (error) {
-    console.error("Gagal mengambil data:", error);
-  }
-}
-
-function getWeatherEmoji(condition) {
-  const text = condition.toLowerCase();
-  if (text.includes("rain")) return "🌧️";
-  if (text.includes("storm")) return "⛈️";
-  if (text.includes("cloud")) return "⛅";
-  if (text.includes("sun") || text.includes("clear")) return "☀️";
-  return "🌤️";
-}
