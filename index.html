@@ -1020,7 +1020,7 @@
     </main>
 
     <!-- AI Chat Widget -->
-    <div id="aiChatWidget" class="fixed bottom-6 right-6 z-50">
+    <div id="aiChatWidget" class="fixed bottom-6 right-6 z-[99999]">
       <!-- Chat Toggle Button -->
       <button
         id="chatToggle"
@@ -1157,7 +1157,7 @@
               type="text"
               id="chatInput"
               placeholder="Tanya tentang cuaca..."
-              class="flex-1 bg-transparent text-mode placeholder-white placeholder-opacity-60 outline-none text-sm"
+              class="flex-1 bg-transparent placeholder-opacity-60 outline-none text-sm"
             />
             <button
               id="sendMessage"
@@ -1418,10 +1418,10 @@
 
     <!-- JavaScript Files -->
     <script type="module" src="js/weather-data.js"></script>
-    <script src="js/weather-app.js"></script>
-    <script src="js/chat-ai.js"></script>
+    <script type="module" src="js/weather-app.js"></script>
     <script type="module" src="js/weather-backend.js"></script>
-    <script src="js/weather-search.js"></script>
+    <script type="module" src="js/weather-search.js"></script>
+    <script type="module" src="js/chat-ai.js"></script>
 
     <!-- Mobile Menu Script -->
     <script>
