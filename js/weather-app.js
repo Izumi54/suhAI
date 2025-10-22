@@ -275,7 +275,7 @@ const WeatherApp = {
             });
         });
     },
-    
+   //bug +1 temperatur 
     simulateWeatherUpdates() {
         setInterval(() => {
             // Randomly update temperature by ±1 degree
