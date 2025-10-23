@@ -1,5 +1,20 @@
 import { WeatherAPIKey } from "./suhAI-backend.js";
 
+if (!window.WeatherData || !window.ChartManager) {
+  console.warn("WeatherData / ChartManager belum siap. Menunggu...");
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      if (window.WeatherData && window.ChartManager) {
+        WeatherApp.init();
+      } else {
+        console.error("WeatherApp gagal inisialisasi: dependensi belum ada.");
+      }
+    }, 500);
+  });
+} else {
+  WeatherApp.init();
+}
+
 // Weather Data Management
 const WeatherData = {
   current: {
@@ -363,7 +378,7 @@ const ChartManager = {
                         <div class="flex flex-col items-center space-y-2 flex-1">
                             <div class="chart-bar bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t-lg w-full" 
                                  style="height: ${
-                                   (day.high / 40) * 100
+                                  (day.high / Math.max(...WeatherData.forecast.map(d => d.high))) * 100
                                  }%; min-height: 20px;"
                                  data-temp="${day.high}">
                             </div>
@@ -481,6 +496,8 @@ window.addEventListener("weather-updated", async (event) => {
   setTimeout(() => {
     window.ChartManager.createTemperatureChart("temperatureChart");
     window.ChartManager.createPrecipitationChart("precipitationChart");
+    console.log("🎨 Update grafik dipanggil:", WeatherData.forecast);
+
   }, 300);
 
   if (window.WeatherApp) {
@@ -527,10 +544,13 @@ window.addEventListener("weather-updated", async (event) => {
 });
 
 // Export for global access
+
 window.WeatherData = WeatherData;
 window.Navigation = Navigation;
 window.UIComponents = UIComponents;
+window.ForecastRenderer = ForecastRenderer;
 window.ChartManager = ChartManager;
+
 
 
 

@@ -1,16 +1,16 @@
 
-input[type="password"]::-ms-reveal,
+/* input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
     display: none;
-}
+} */
 
 /* Hilangkan tombol default di Chrome/Safari */
-input[type="password"]::-webkit-credentials-auto-fill-button,
+/* input[type="password"]::-webkit-credentials-auto-fill-button,
 input[type="password"]::-webkit-clear-button,
 input[type="password"]::-webkit-inner-spin-button {
     display: none !important;
     -webkit-appearance: none;
-}
+} */
 /* Enhanced Background with Animated Elements */
 /* .weather-gradient {
     background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FFEAA7 100%);
@@ -293,13 +293,13 @@ input[type="password"]::-webkit-inner-spin-button {
 
 #themeKnob, #mobileThemeKnob {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 2px 8px rgb(0, 0, 0);
 }
 
 .dark #themeKnob, .dark #mobileThemeKnob {
     background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgb(255, 255, 255);
 }
 
 /* Enhanced Animations */
@@ -307,88 +307,30 @@ input[type="password"]::-webkit-inner-spin-button {
     animation: pulseGentle 3s ease-in-out infinite;
 }
 
-@keyframes pulseGentle {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.9;
-    }
-}
+
 
 .slide-in-right {
     animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes slideInRight {
-    from {
-        transform: translateX(100px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
 
 .fade-in-up {
     animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes fadeInUp {
-    from {
-        transform: translateY(40px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 .bounce-gentle {
     animation: bounceGentle 2s ease-in-out infinite;
 }
 
-@keyframes bounceGentle {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
 
-/* Responsive Design */
-@media (min-width: 768px) {
-    .weather-gradient {
-        background-size: 300% 300%;
-    }
-    
-    .glassmorphism {
-        backdrop-filter: blur(25px);
-    }
-    
-    .card-hover:hover {
-        transform: translateY(-8px) scale(1.03);
-    }
-}
 
-@media (min-width: 1024px) {
-    .weather-gradient {
-        background-size: 200% 200%;
-    }
-    
-    .glassmorphism {
-        backdrop-filter: blur(30px);
-    }
-    
-    .card-hover:hover {
-        transform: translateY(-10px) scale(1.05);
-    }
-}
+
+
+
+
+
+
+
 
 /* Interactive Elements */
 .interactive-element {
@@ -437,10 +379,7 @@ input[type="password"]::-webkit-inner-spin-button {
     animation: shimmer 1.5s infinite;
 }
 
-@keyframes shimmer {
-    0% { background-position: -200px 0; }
-    100% { background-position: calc(200px + 100%) 0; }
-}
+
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -466,6 +405,14 @@ input[type="password"]::-webkit-inner-spin-button {
     animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+
+.chat-message {
+    animation: fadeInMessage 0.3s ease-out;
+}
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: calc(200px + 100%) 0; }
+}
 @keyframes slideInUp {
     from {
         transform: translateY(100px);
@@ -475,10 +422,6 @@ input[type="password"]::-webkit-inner-spin-button {
         transform: translateY(0);
         opacity: 1;
     }
-}
-
-.chat-message {
-    animation: fadeInMessage 0.3s ease-out;
 }
 
 @keyframes fadeInMessage {
@@ -491,11 +434,6 @@ input[type="password"]::-webkit-inner-spin-button {
         opacity: 1;
     }
 }
-
-.typing-indicator {
-    animation: typingPulse 1.5s ease-in-out infinite;
-}
-
 @keyframes typingPulse {
     0%, 100% {
         opacity: 0.4;
@@ -504,6 +442,11 @@ input[type="password"]::-webkit-inner-spin-button {
         opacity: 1;
     }
 }
+
+.typing-indicator {
+    animation: typingPulse 1.5s ease-in-out infinite;
+}
+
 
 /* Chat Input Focus */
 #chatInput:focus {
@@ -590,18 +533,19 @@ nav.scrolled {
 }
 
 /* Chart Styles */
-.chart-container {
-    position: relative;
-    height: 300px;
-    width: 100%;
-}
 /* :root.dark .chart-container{
 color: black;
 } */
+.chart-container {
+    position: relative;
+    height: 200px;
+    width: 100%;
+}
 
 
 .chart-bar {
     transition: all 0.3s ease;
+    border-radius: 0.5rem;
 }
 
 .chart-bar:hover {
@@ -750,49 +694,187 @@ footer .flex a:hover svg {
     animation: shake 0.3s ease-in-out 2;
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-}
+
 
 /* Extreme Weather Alert */
 .extreme-weather-alert {
     animation: pulse 1s infinite;
 }
 
+
+/* Mobile Optimizations */
+
+/* === FIX FINAL: NAV MOBILE & TABLET === */
+
+
+#mobileMenu.active {
+  display: block !important;
+  opacity: 1;
+  transform: scaleY(1);
+  pointer-events: auto;
+ animation: bounceOpen 0.35s ease-out;
+  
+}
+#mobileMenu {
+display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-radius: 1rem;
+    transition: transform 0.35s ease-in-out, opacity 0.3s ease;
+  transform-origin: top;
+  transform: scaleY(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Mode gelap */
+:root.dark #mobileMenu {
+  background: rgba(20, 25, 35, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+
+
+
+/* RESPONSIVE */
+@media (min-width: 768px) {
+
+    
+    .weather-gradient {
+        background-size: 300% 300%;
+    }
+    
+    .glassmorphism {
+        backdrop-filter: blur(25px);
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-8px) scale(1.03);
+    }
+
+}
+@media (min-width: 1024px) {
+
+    .weather-gradient {
+        background-size: 200% 200%;
+    }
+    
+    .glassmorphism {
+        backdrop-filter: blur(30px);
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-10px) scale(1.05);
+    }
+    .md\:hidden { display: none !important; } .md\:flex { display: flex !important; }
+
+}
+
+@media (max-width: 1023px) { .md\:hidden { display: block !important; } .md\:flex { display: none !important; } }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  /* Spacing lebih rapat antar section */
+ main {
+  padding-top: 5rem !important;
+  padding-bottom: 2rem !important;
+}
+
+  main > * + * {
+    margin-top: 1.25rem !important;
+  }
+  .grid {
+    gap: 1rem !important;
+  }
+  .glassmorphism-enhanced,
+  .glassmorphism-card,
+  .glassmorphism-light {
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+   .section {
+    min-height: auto !important;       /* hentikan efek full screen */
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* Perbaikan kecil tampilan di tablet */
+   nav {
+    position: relative;
+    z-index: 10000;
+  }
+  #mobileWeatherSearch {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+    footer {
+    margin-top: 2rem !important;       /* rapat dengan heatmap */
+    padding-top: 1rem !important;
+  }
+}
+
+/* KEYFRAMES */
+@keyframes bounceOpen {
+  0% { transform: scaleY(0.6); opacity: 0; }
+  60% { transform: scaleY(1.05); opacity: 1; }
+  100% { transform: scaleY(1); }
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.7; }
 }
+@keyframes slideInRight {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes pulseGentle {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
 
-/* Mobile Optimizations */
-@media (max-width: 780px) {
-    .section {
-        padding: 1rem 0;
+@keyframes fadeInUp {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
     }
-    
-    .glassmorphism {
-        backdrop-filter: blur(15px);
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
-    
-    .card-hover:hover {
-        transform: translateY(-2px) scale(1.01);
+}
+
+@keyframes bounceGentle {
+    0%, 100% {
+        transform: translateY(0);
     }
-    
-    /* Mobile Footer */
-    footer {
-        margin-top: 2rem;
-        padding: 1.5rem;
-    }
-    
-    footer .grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-    
-    /* Mobile Search */
-    #mobileWeatherSearch {
-        font-size: 16px; /* Prevents zoom on iOS */
+    50% {
+        transform: translateY(-10px);
     }
 }
