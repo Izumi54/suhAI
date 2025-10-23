@@ -209,7 +209,8 @@ const WeatherApp = {
             <div class="glassmorphism-enhanced rounded-2xl p-6 max-w-md mx-4">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-white text-xl font-bold">${day.day} - ${day.date}</h3>
-                    <button class="text-white opacity-60 hover:opacity-100" onclick="this.parentElement.parentElement.remove()">
+                    <button class="text-white opacity-60 hover:opacity-100" onclick="document.querySelector('.fixed.inset-0').remove()">
+
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                         </svg>
