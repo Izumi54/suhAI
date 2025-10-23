@@ -305,63 +305,76 @@ class WeatherBackend {
   }
 
   async detectLocation() {
-    if (!navigator.geolocation) {
-      this.showError("Geolokasi tidak didukung oleh browser");
-      return;
-    }
-
+    this.showLoading(); // tampilkan loading indicator di UI
+  
     try {
-      this.showLoading();
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            const { latitude, longitude } = position.coords;
-            const accuracy = position.coords.accuracy;
-            console.log(
-              "Location detected:",
-              latitude,
-              longitude,
-              "Accuracy:",
-              accuracy,
-              "meters"
-            );
-
-            // Use GPS location even if accuracy is not perfect
-            // Weather API can handle approximate coordinates
-            const weatherData = await this.getWeatherData(
-              `${latitude},${longitude}`
-            );
-            this.updateWeatherDisplay(weatherData);
-            this.addToHistory(weatherData.location.name);
+      // --- 1) Coba ambil lokasi dari Woosmap dulu ---
+      const WOOSMAP_KEY = "woos-24c0e4c3-0033-337f-b262-2fe39293c775"; // ganti dengan key-mu
+      const woosmapURL = `https://api.woosmap.com/geolocation/position?key=${WOOSMAP_KEY}`;
+  
+      // Siapkan timeout agar fetch tidak menggantung
+      const controller = new AbortController();   
+      const timeoutMs = 3000; // batas waktu 3 detik
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  
+      const response = await fetch(woosmapURL, { signal: controller.signal });
+      clearTimeout(timeoutId);
+  
+      if (!response.ok) throw new Error(`Woosmap HTTP ${response.status}`);
+  
+      // Ambil data JSON dari response
+      const data = await response.json();
+  
+      // Validasi hasil lokasi Woosmap
+      if (data && data.location && typeof data.location.lat === "number" && typeof data.location.lng === "number") {
+        const latitude = data.location.lat;
+        const longitude = data.location.lng;
+        console.log("✅ Lokasi dari Woosmap:", latitude, longitude);
+  
+        const weatherData = await this.getWeatherData(`${latitude},${longitude}`);
+        this.updateWeatherDisplay(weatherData);
+        this.addToHistory(weatherData.location.name);
+        this.hideLoading();
+        return;
+      } else {
+        throw new Error("Data lokasi Woosmap tidak valid");
+      }
+    } catch (err) {
+      // --- Kalau Woosmap gagal, jalankan fallback ke geolocation bawaan browser ---
+      console.warn("⚠️ Woosmap gagal, fallback ke geolocation:", err.message);
+  
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            try {
+              const latitude = pos.coords.latitude;
+              const longitude = pos.coords.longitude;
+              console.log("📍 Lokasi fallback dari browser:", latitude, longitude);
+  
+              const weatherData = await this.getWeatherData(`${latitude},${longitude}`);
+              this.updateWeatherDisplay(weatherData);
+              this.addToHistory(weatherData.location.name);
+            } catch (error) {
+              console.error("❌ Error ambil weather data fallback:", error);
+              this.showError("Gagal mengambil data cuaca fallback.");
+            } finally {
+              this.hideLoading();
+            }
+          },
+          (error) => {
+            console.error("❌ Fallback geolocation gagal:", error);
+            this.showError("Tidak bisa mendeteksi lokasi Anda.");
             this.hideLoading();
-          } catch (error) {
-            console.error("Weather API error:", error);
-            this.hideLoading();
-            this.showError(
-              "Gagal mengambil data cuaca untuk lokasi Anda. Silakan cari kota secara manual."
-            );
-          }
-        },
-        async (error) => {
-          console.warn("Geolocation failed:", error);
-          this.hideLoading();
-          this.showError(
-            "Gagal mendeteksi lokasi. Silakan cari kota secara manual."
-          );
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 300000, // 5 minutes cache
-        }
-      );
-    } catch (error) {
-      console.error("Location detection error:", error);
-      this.hideLoading();
-      this.showError("Gagal mendeteksi lokasi");
+          },
+          { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
+      } else {
+        this.showError("Browser tidak mendukung geolokasi.");
+        this.hideLoading();
+      }
     }
   }
+  
 
   async refreshWeather() {
     if (this.currentCity) {
