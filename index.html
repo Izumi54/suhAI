@@ -1,902 +1,1498 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WeatherAI Dashboard - Jepara</title>
-    <meta name="description" content="Website cuaca interaktif dengan AI recommendations untuk Jepara">
-    
+    <meta
+      name="description"
+      content="Website cuaca interaktif dengan AI recommendations untuk Jepara"
+    />
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        'weather-blue': '#45B7D1',
-                        'weather-orange': '#FFAE00',
-                        'weather-green': '#96CEB4',
-                        'weather-pink': '#FF6B6B',
-                        'weather-yellow': '#FFEAA7'
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "weather-blue": "#45B7D1",
+              "weather-orange": "#FFAE00",
+              "weather-green": "#96CEB4",
+              "weather-pink": "#FF6B6B",
+              "weather-yellow": "#FFEAA7",
+            },
+          },
+        },
+      };
     </script>
-    
+
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-    
+    <link rel="stylesheet" href="css/styles.css" />
+
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌤️</text></svg>">
-</head>
-<body class="weather-gradient min-h-screen overflow-x-hidden">
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌤️</text></svg>"
+    />
+  </head>
+  <body class="overflow-x-hidden">
     <!-- Navigation Header -->
-    <nav class="glassmorphism-light rounded-b-2xl fixed left-4 right-4 top-4 px-6 py-4 z-50 backdrop-blur-xl">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-white text-xl font-bold">WeatherAI</h1>
-                    <p class="text-white text-sm opacity-80">Jepara</p>
-                </div>
-            </div>
-            
-            <!-- Navigation Menu -->
-            <div class="hidden md:flex items-center space-x-2">
-                <!-- Weather Search -->
-                <div class="relative">
-                    <div class="flex items-center space-x-2">
-                        <input 
-                            type="text" 
-                            id="weatherSearch" 
-                            placeholder="Cari kota..." 
-                            class="w-48 px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-white placeholder-opacity-60 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 transition-all"
-                        >
-                        <button id="searchBtn" class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                            </svg>
-                        </button>
-                        <button id="locationBtn" class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all" title="Lokasi Saya">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                            </svg>
-                        </button>
-                        <button id="refreshBtn" class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all" title="Refresh Cuaca">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <!-- Search Suggestions -->
-                    <div id="searchSuggestions" class="absolute top-full left-0 right-0 mt-1 bg-white bg-opacity-90 backdrop-blur-xl rounded-lg shadow-lg hidden z-50">
-                        <div id="suggestionsList" class="py-2"></div>
-                    </div>
-                </div>
-                
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all" data-section="dashboard">
-                    Dashboard
-                </button>
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all" data-section="forecast">
-                    Prediksi
-                </button>
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all" data-section="recommendations">
-                    Rekomendasi
-                </button>
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all" data-section="heatmap">
-                    Peta Panas
-                </button>
-                <button id="themeToggle" class="relative flex items-center justify-center w-12 h-8 rounded-full btn-glass interactive-element group" aria-label="Toggle theme">
-                    <span class="absolute left-1 top-1 w-6 h-6 rounded-full bg-white bg-opacity-80 shadow-md transform transition-all duration-300" id="themeKnob"></span>
-                    <span class="absolute left-2 text-[10px] opacity-80">☀️</span>
-                    <span class="absolute right-2 text-[10px] opacity-80">🌙</span>
-                </button>
-            </div>
-            
-            
-            <!-- Mobile Menu Button -->
-            <button id="mobileMenuBtn" class="md:hidden text-white p-2">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    <nav
+      class="glassmorphism-light rounded-b-2xl fixed left-4 right-4 top-4 px-6 py-4 z-50 backdrop-blur-xl"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div
+            class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-mode"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-mode text-xl font-bold">WeatherAI</h1>
+            <p id="textKecil" class="text-mode text-sm opacity-80">Jepara</p>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div class="hidden md:flex items-center space-x-2">
+          <!-- Weather Search -->
+          <div class="relative">
+            <div class="flex items-center space-x-2">
+              <input
+                type="text"
+                id="weatherSearch"
+                placeholder="Cari kota..."
+                class="w-48 px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-mode placeholder-opacity-60 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 transition-all"
+              />
+              <button
+                id="searchBtn"
+                class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+              >
+                <svg
+                  class="w-4 h-4 text-mode"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                  />
                 </svg>
-            </button>
-        </div>
-        
-        <!-- Mobile Navigation Menu -->
-        <div id="mobileMenu" class="hidden md:hidden mt-4 pt-4 border-t border-white border-opacity-20">
-            <div class="flex flex-col space-y-2">
-                <!-- Mobile Weather Search -->
-                <div class="px-4 py-2">
-                    <div class="flex items-center space-x-2">
-                        <input 
-                            type="text" 
-                            id="mobileWeatherSearch" 
-                            placeholder="Cari kota..." 
-                            class="flex-1 px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-white placeholder-opacity-60 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 transition-all"
-                        >
-                        <button id="mobileSearchBtn" class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                            </svg>
-                        </button>
-                        <button id="mobileLocationBtn" class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all" title="Lokasi Saya">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                            </svg>
-                        </button>
-                        <button id="mobileRefreshBtn" class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all" title="Refresh Cuaca">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Mobile Theme Toggle -->
-                <div class="flex items-center justify-between px-4 py-2">
-                    <span class="text-white text-sm font-semibold">Mode Tema</span>
-                    <button id="mobileThemeToggle" class="relative flex items-center justify-center w-12 h-8 rounded-full btn-glass interactive-element group" aria-label="Toggle theme">
-                        <span class="absolute left-1 top-1 w-6 h-6 rounded-full bg-white bg-opacity-80 shadow-md transform transition-all duration-300" id="mobileThemeKnob"></span>
-                        <span class="absolute left-2 text-[10px] opacity-80">☀️</span>
-                        <span class="absolute right-2 text-[10px] opacity-80">🌙</span>
-                    </button>
-                </div>
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left" data-section="dashboard">
-                    Dashboard
-                </button>
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left" data-section="forecast">
-                    Prediksi
-                </button>
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left" data-section="recommendations">
-                    Rekomendasi
-                </button>
-                <button class="nav-btn px-4 py-2 text-white text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left" data-section="heatmap">
-                    Peta Panas
-                </button>
+              </button>
+              <button
+                id="locationBtn"
+                class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+                title="Lokasi Saya"
+              >
+                <svg
+                  class="w-4 h-4 text-mode"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                  />
+                </svg>
+              </button>
+              <button
+                id="refreshBtn"
+                class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+                title="Refresh Cuaca"
+              >
+                <svg
+                  class="w-4 h-4 text-mode"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                  />
+                </svg>
+              </button>
             </div>
+            <!-- Search Suggestions -->
+            <div
+              id="searchSuggestions"
+              class="absolute top-full left-0 right-0 mt-1 bg-white bg-opacity-90 backdrop-blur-xl rounded-lg shadow-lg hidden z-50"
+            >
+              <div id="suggestionsList" class="py-2"></div>
+            </div>
+          </div>
+
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all"
+            data-section="dashboard"
+          >
+            Dashboard
+          </button>
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all"
+            data-section="forecast"
+          >
+            Prediksi
+          </button>
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all"
+            data-section="recommendations"
+          >
+            Rekomendasi
+          </button>
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all"
+            data-section="heatmap"
+          >
+            Peta Panas
+          </button>
+          <button
+            id="themeToggle"
+            class="relative flex items-center justify-center w-12 h-8 rounded-full btn-glass interactive-element group"
+            aria-label="Toggle theme"
+          >
+            <span
+              class="absolute left-1 top-1 w-6 h-6 rounded-full bg-white bg-opacity-80 shadow-md transform transition-all duration-300"
+              id="themeKnob"
+            ></span>
+            <span class="absolute left-2 text-[10px] opacity-80">☀️</span>
+            <span class="absolute right-2 text-[10px] opacity-80">🌙</span>
+          </button>
         </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="md:hidden text-mode p-2">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Navigation Menu -->
+      <div
+        id="mobileMenu"
+        class="hidden md:hidden mt-4 pt-4 border-t border-white border-opacity-20"
+      >
+        <div class="flex flex-col space-y-2">
+          <!-- Mobile Weather Search -->
+          <div class="px-4 py-2">
+            <div class="flex items-center space-x-2">
+              <input
+                type="text"
+                id="mobileWeatherSearch"
+                placeholder="Cari kota..."
+                class="flex-1 px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-mode placeholder-white placeholder-opacity-60 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 transition-all"
+              />
+              <button
+                id="mobileSearchBtn"
+                class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+              >
+                <svg
+                  class="w-4 h-4 text-mode"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                  />
+                </svg>
+              </button>
+              <button
+                id="mobileLocationBtn"
+                class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+                title="Lokasi Saya"
+              >
+                <svg
+                  class="w-4 h-4 text-mode"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                  />
+                </svg>
+              </button>
+              <button
+                id="mobileRefreshBtn"
+                class="px-3 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all"
+                title="Refresh Cuaca"
+              >
+                <svg
+                  class="w-4 h-4 text-mode"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile Theme Toggle -->
+          <div class="flex items-center justify-between px-4 py-2">
+            <span class="text-mode text-sm font-semibold">Mode Tema</span>
+            <button
+              id="mobileThemeToggle"
+              class="relative flex items-center justify-center w-12 h-8 rounded-full btn-glass interactive-element group"
+              aria-label="Toggle theme"
+            >
+              <span
+                class="absolute left-1 top-1 w-6 h-6 rounded-full bg-white bg-opacity-80 shadow-md transform transition-all duration-300"
+                id="mobileThemeKnob"
+              ></span>
+              <span class="absolute left-2 text-[10px] opacity-80">☀️</span>
+              <span class="absolute right-2 text-[10px] opacity-80">🌙</span>
+            </button>
+          </div>
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left"
+            data-section="dashboard"
+          >
+            Dashboard
+          </button>
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left"
+            data-section="forecast"
+          >
+            Prediksi
+          </button>
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left"
+            data-section="recommendations"
+          >
+            Rekomendasi
+          </button>
+          <button
+            class="nav-btn px-4 py-2 text-mode text-sm font-semibold hover:bg-white hover:bg-opacity-20 rounded-lg transition-all text-left"
+            data-section="heatmap"
+          >
+            Peta Panas
+          </button>
+        </div>
+      </div>
     </nav>
 
     <!-- Main Content -->
     <main class="px-4 pt-28 pb-6 max-w-7xl mx-auto space-y-8">
-        
-        <!-- Dashboard Section -->
-        <section id="dashboardSection" class="section">
-            <!-- Desktop Layout -->
-            <div class="hidden lg:block">
-                <div class="grid grid-cols-12 gap-6">
-                    <!-- Left Column - Main Weather -->
-                    <div class="col-span-8">
-                        <div class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced">
-                            <!-- Temperature Display -->
-                            <div class="text-center mb-8">
-                                <div class="text-9xl font-bold text-white text-glow mb-4 pulse-gentle" id="currentTemp">34°</div>
-                                <div class="text-white text-2xl font-semibold mb-2" id="weatherCondition">Cerah Berawan</div>
-                                <div class="text-white text-lg opacity-80" id="feelsLike">Terasa seperti: 39°</div>
-                            </div>
-                            
-                            <!-- Warning Card -->
-                            <div class="glassmorphism-card rounded-2xl p-6 mb-8 interactive-element">
-                                <div class="flex items-start space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-white text-xl font-bold mb-3">LEVEL EKSTREM</h3>
-                                        <p class="text-white text-base leading-relaxed">
-                                            AI memprediksi resiko dehidrasi sangat tinggi. Hindari aktivitas di luar ruangan antara pukul 11.00 - 15.00
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Weather Stats -->
-                            <div class="grid grid-cols-3 gap-6 mb-8">
-                                <div class="text-center glassmorphism-light rounded-2xl p-6 interactive-element">
-                                    <div class="flex justify-center mb-3">
-                                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="text-white text-sm font-semibold mb-2">Kelembapan</div>
-                                    <div class="text-white text-xl font-bold" id="humidity">75%</div>
-                                </div>
-                                <div class="text-center glassmorphism-light rounded-2xl p-6 interactive-element">
-                                    <div class="flex justify-center mb-3">
-                                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="text-white text-sm font-semibold mb-2">Indeks UV</div>
-                                    <div class="text-white text-xl font-bold" id="uvIndex">8</div>
-                                    <div class="text-white text-xs opacity-80">Sangat tinggi</div>
-                                </div>
-                                <div class="text-center glassmorphism-light rounded-2xl p-6 interactive-element">
-                                    <div class="flex justify-center mb-3">
-                                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M2 17h20v2H2zm1.15-4.05L4 12l.85.95L5.7 12l-.85-.95L4 10.1l-.85.95L2.3 12l.85.95zM22 12l-.85-.95L20.3 12l.85.95L22 13.9l.85-.95L23.7 12l-.85-.95L22 12zM12 2l.85.95L13.7 2l-.85-.95L12 .1l-.85.95L10.3 2l.85-.95L12 2zM12 22l-.85-.95L10.3 22l.85-.95L12 20.1l.85.95L13.7 22l-.85.95L12 22z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="text-white text-sm font-semibold mb-2">Kecepatan Angin</div>
-                                    <div class="text-white text-xl font-bold" id="windSpeed">12 km/jam</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Action Buttons -->
-                            <div class="grid grid-cols-3 gap-4">
-                                <button class="btn-glass rounded-2xl py-4 px-6 text-center interactive-element" data-section="heatmap">
-                                    <div class="text-white text-sm font-semibold">Lihat Peta Panas</div>
-                                </button>
-                                <button class="btn-glass rounded-2xl py-4 px-6 text-center interactive-element" data-section="forecast">
-                                    <div class="text-white text-sm font-semibold">Prediksi<br/>7 Hari</div>
-                                </button>
-                                <button class="btn-glass rounded-2xl py-4 px-6 text-center interactive-element" data-section="recommendations">
-                                    <div class="text-white text-sm font-semibold">Rekomendasi<br/>Kesehatan</div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Right Column - Additional Info -->
-                    <div class="col-span-4">
-                        <div class="glassmorphism-light rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced">
-                            <h3 class="text-white text-xl font-bold mb-4 text-center">Informasi Tambahan</h3>
-                            <div class="space-y-4">
-                                <div class="glassmorphism-medium rounded-2xl p-4 text-center">
-                                    <div class="text-white text-sm opacity-80 mb-2">Tekanan Udara</div>
-                                    <div class="text-white text-2xl font-bold" id="pressure">1013 hPa</div>
-                                </div>
-                                <div class="glassmorphism-medium rounded-2xl p-4 text-center">
-                                    <div class="text-white text-sm opacity-80 mb-2">Indeks Kualitas Udara</div>
-                                    <div class="text-white text-2xl font-bold" id="airQuality">Baik</div>
-                                </div>
-                                <div class="glassmorphism-medium rounded-2xl p-4 text-center">
-                                    <div class="text-white text-sm opacity-80 mb-2">Visibilitas</div>
-                                    <div class="text-white text-2xl font-bold" id="visibility">10 km</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Mobile/Tablet Layout -->
-            <div class="lg:hidden">
-                <!-- Current Weather Card -->
-                <div class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced">
-                    <!-- Temperature Display -->
-                    <div class="text-center mb-6">
-                        <div class="text-8xl font-bold text-white text-glow mb-2 pulse-gentle" id="currentTempMobile">34°</div>
-                        <div class="text-white text-xl font-semibold mb-1" id="weatherConditionMobile">Cerah Berawan</div>
-                        <div class="text-white text-sm opacity-80" id="feelsLikeMobile">Terasa seperti: 39°</div>
-                    </div>
-
-                    <!-- Warning Card -->
-                    <div class="glassmorphism-card rounded-2xl p-4 mb-6 interactive-element">
-                        <div class="flex items-start space-x-3">
-                            <div class="flex-shrink-0">
-                                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/>
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-white text-lg font-bold mb-2">LEVEL EKSTREM</h3>
-                                <p class="text-white text-sm leading-relaxed">
-                                    AI memprediksi resiko dehidrasi sangat tinggi. Hindari aktivitas di luar ruangan antara pukul 11.00 - 15.00
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Weather Stats -->
-                    <div class="grid grid-cols-3 gap-4 mb-6">
-                        <div class="text-center glassmorphism-light rounded-2xl p-4 interactive-element">
-                            <div class="flex justify-center mb-2">
-                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                                </svg>
-                            </div>
-                            <div class="text-white text-xs font-semibold mb-1">Kelembapan</div>
-                            <div class="text-white text-lg font-bold" id="humidityMobile">75%</div>
-                        </div>
-                        <div class="text-center glassmorphism-light rounded-2xl p-4 interactive-element">
-                            <div class="flex justify-center mb-2">
-                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                </svg>
-                            </div>
-                            <div class="text-white text-xs font-semibold mb-1">Indeks UV</div>
-                            <div class="text-white text-lg font-bold" id="uvIndexMobile">8</div>
-                        </div>
-                        <div class="text-center glassmorphism-light rounded-2xl p-4 interactive-element">
-                            <div class="flex justify-center mb-2">
-                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M2 17h20v2H2zm1.15-4.05L4 12l.85.95L5.7 12l-.85-.95L4 10.1l-.85.95L2.3 12l.85.95zM22 12l-.85-.95L20.3 12l.85.95L22 13.9l.85-.95L23.7 12l-.85-.95L22 12zM12 2l.85.95L13.7 2l-.85-.95L12 .1l-.85.95L10.3 2l.85-.95L12 2zM12 22l-.85-.95L10.3 22l.85-.95L12 20.1l.85.95L13.7 22l-.85.95L12 22z"/>
-                                </svg>
-                            </div>
-                            <div class="text-white text-xs font-semibold mb-1">Angin</div>
-                            <div class="text-white text-lg font-bold" id="windSpeedMobile">12 km/jam</div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element" data-section="forecast">
-                            <div class="text-white text-sm font-semibold">Prediksi 7 Hari</div>
-                        </button>
-                        <button class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element" data-section="recommendations">
-                            <div class="text-white text-sm font-semibold">Rekomendasi</div>
-                        </button>
-                        <button class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element" data-section="heatmap">
-                            <div class="text-white text-sm font-semibold">Peta Panas</div>
-                        </button>
-                        <button class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element" onclick="ChatAI.toggleChat()">
-                            <div class="text-white text-sm font-semibold">Chat AI</div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Forecast Section -->
-        <section id="forecastSection" class="section">
-            <div class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced">
+      <!-- Dashboard Section -->
+      <section id="dashboardSection" class="section">
+        <!-- Desktop Layout -->
+        <div class="hidden lg:block">
+          <div class="grid grid-cols-12 gap-6">
+            <!-- Left Column - Main Weather -->
+            <div class="col-span-8">
+              <div
+                class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced"
+              >
+                <!-- Temperature Display -->
                 <div class="text-center mb-8">
-                    <h2 class="text-white text-3xl font-bold mb-2">Prediksi Cuaca 7 Hari</h2>
-                    <p class="text-white text-lg opacity-80">Ramalan cuaca untuk Jepara</p>
+                  <div
+                    class="text-9xl font-bold text-mode text-glow mb-4 pulse-gentle"
+                    id="currentTemp"
+                  >
+                    34°
+                  </div>
+                  <div
+                    class="text-mode text-2xl font-semibold mb-2"
+                    id="weatherCondition"
+                  >
+                    Cerah Berawan
+                  </div>
+                  <div class="text-mode text-lg opacity-80" id="feelsLike">
+                    Terasa seperti: 39°
+                  </div>
                 </div>
-                
-                <!-- Forecast List -->
-                <div id="forecastList" class="space-y-4 mb-8">
-                    <!-- Forecast items will be generated by JavaScript -->
-                </div>
-                
-                <!-- Charts -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Temperature Chart -->
-                    <div class="glassmorphism-light rounded-2xl p-6">
-                        <h3 class="text-white text-xl font-bold mb-4 text-center">Grafik Suhu</h3>
-                        <div id="temperatureChart" class="chart-container">
-                            <!-- Chart will be generated by JavaScript -->
-                        </div>
-                    </div>
-                    
-                    <!-- Precipitation Chart -->
-                    <div class="glassmorphism-light rounded-2xl p-6">
-                        <h3 class="text-white text-xl font-bold mb-4 text-center">Grafik Presipitasi</h3>
-                        <div id="precipitationChart" class="chart-container">
-                            <!-- Chart will be generated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Recommendations Section -->
-        <section id="recommendationsSection" class="section">
-            <div class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced">
-                <div class="text-center mb-8">
-                    <h2 class="text-white text-3xl font-bold mb-2">Rekomendasi AI</h2>
-                    <p class="text-white text-lg opacity-80">Saran kesehatan berdasarkan kondisi cuaca</p>
+                <!-- Warning Card -->
+                <div
+                  class="glassmorphism-card rounded-2xl p-6 mb-8 interactive-element"
+                >
+                  <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                      <svg
+                        class="w-10 h-10 text-mode"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"
+                        />
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="text-mode text-xl font-bold mb-3">
+                        LEVEL EKSTREM
+                      </h3>
+                      <p class="text-mode text-base leading-relaxed">
+                        AI memprediksi resiko dehidrasi sangat tinggi. Hindari
+                        aktivitas di luar ruangan antara pukul 11.00 - 15.00
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                
-                <!-- Recommendations List -->
-                <div id="recommendationsList" class="space-y-6">
-                    <!-- Recommendation items will be generated by JavaScript -->
-                </div>
-            </div>
-        </section>
 
-        <!-- Heatmap Section -->
-        <section id="heatmapSection" class="section">
-            <!-- Desktop Layout -->
-            <div class="hidden lg:block">
-                <div class="grid grid-cols-12 gap-6">
-                    <!-- Left Column - Map Controls -->
-                    <div class="col-span-4">
-                        <div class="glassmorphism-enhanced rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced">
-                            <h3 class="text-white text-xl font-bold mb-4 text-center">Kontrol Peta</h3>
-                            
-                            <!-- Temperature Range -->
-                            <div class="mb-6">
-                                <label class="text-white text-sm font-semibold mb-2 block">Rentang Suhu</label>
-                                <div class="glassmorphism-light rounded-2xl p-4">
-                                    <div class="flex justify-between text-white text-sm mb-2">
-                                        <span>20°C</span>
-                                        <span>40°C</span>
-                                    </div>
-                                    <input type="range" min="20" max="40" value="34" class="w-full h-2 bg-white rounded-lg appearance-none cursor-pointer" id="tempRange">
-                                    <div class="text-center text-white text-lg font-bold mt-2" id="currentTempRange">34°C</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Weather Layers -->
-                            <div class="mb-6">
-                                <label class="text-white text-sm font-semibold mb-3 block">Layer Cuaca</label>
-                                <div class="space-y-3">
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 bg-transparent border-white rounded focus:ring-blue-500">
-                                        <span class="text-white text-sm">Suhu</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-transparent border-white rounded focus:ring-blue-500">
-                                        <span class="text-white text-sm">Kelembapan</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-transparent border-white rounded focus:ring-blue-500">
-                                        <span class="text-white text-sm">Indeks UV</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-transparent border-white rounded focus:ring-blue-500">
-                                        <span class="text-white text-sm">Kecepatan Angin</span>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <!-- Legend -->
-                            <div class="mb-6">
-                                <label class="text-white text-sm font-semibold mb-3 block">Legenda Suhu</label>
-                                <div class="glassmorphism-light rounded-2xl p-4">
-                                    <div class="space-y-2">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-4 h-4 bg-red-500 rounded"></div>
-                                            <span class="text-white text-xs">Sangat Panas (35°+)</span>
-                                        </div>
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-4 h-4 bg-orange-500 rounded"></div>
-                                            <span class="text-white text-xs">Panas (30-35°)</span>
-                                        </div>
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-4 h-4 bg-yellow-500 rounded"></div>
-                                            <span class="text-white text-xs">Hangat (25-30°)</span>
-                                        </div>
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-4 h-4 bg-green-500 rounded"></div>
-                                            <span class="text-white text-xs">Nyaman (20-25°)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Time Controls -->
-                            <div>
-                                <label class="text-white text-sm font-semibold mb-3 block">Waktu</label>
-                                <div class="glassmorphism-light rounded-2xl p-4">
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <button class="btn-glass rounded-xl py-2 px-3 text-center interactive-element">
-                                            <div class="text-white text-xs font-semibold">Sekarang</div>
-                                        </button>
-                                        <button class="btn-glass rounded-xl py-2 px-3 text-center interactive-element">
-                                            <div class="text-white text-xs font-semibold">3 Jam</div>
-                                        </button>
-                                        <button class="btn-glass rounded-xl py-2 px-3 text-center interactive-element">
-                                            <div class="text-white text-xs font-semibold">6 Jam</div>
-                                        </button>
-                                        <button class="btn-glass rounded-xl py-2 px-3 text-center interactive-element">
-                                            <div class="text-white text-xs font-semibold">24 Jam</div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Weather Stats -->
+                <div class="grid grid-cols-3 gap-6 mb-8">
+                  <div
+                    class="text-center glassmorphism-light rounded-2xl p-6 interactive-element"
+                  >
+                    <div class="flex justify-center mb-3">
+                      <svg
+                        class="w-8 h-8 text-mode"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                        />
+                      </svg>
                     </div>
-                    
-                    <!-- Right Column - Interactive Map -->
-                    <div class="col-span-8">
-                        <div class="glassmorphism-enhanced rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced">
-                            <div class="flex items-center justify-between mb-6">
-                                <h3 class="text-white text-2xl font-bold">Peta Panas Jepara</h3>
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-gentle"></div>
-                                    <span class="text-white text-sm">Live Data</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Map Container -->
-                            <div class="relative glassmorphism-light rounded-2xl p-4 mb-6" style="height: 500px;">
-                                <div class="relative w-full h-full bg-gradient-to-br from-blue-400 via-green-400 to-yellow-400 rounded-xl overflow-hidden">
-                                    <!-- Map Grid -->
-                                    <div id="heatmapGrid" class="absolute inset-0 grid grid-cols-8 grid-rows-6 gap-1 p-2">
-                                        <!-- Heatmap cells will be generated by JavaScript -->
-                                    </div>
-                                    
-                                    <!-- Map Overlay Info -->
-                                    <div class="absolute top-4 left-4 glassmorphism-medium rounded-xl p-3">
-                                        <div class="text-white text-sm font-semibold">Jepara</div>
-                                        <div class="text-white text-xs opacity-80">Koordinat: -6.5944, 110.6717</div>
-                                    </div>
-                                    
-                                    <!-- Zoom Controls -->
-                                    <div class="absolute bottom-4 right-4 flex flex-col space-y-2">
-                                        <button class="glassmorphism-medium rounded-lg p-2 text-white hover:scale-110 transition-transform">
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                                            </svg>
-                                        </button>
-                                        <button class="glassmorphism-medium rounded-lg p-2 text-white hover:scale-110 transition-transform">
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M19 13H5v-2h14v2z"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Map Stats -->
-                            <div class="grid grid-cols-4 gap-4">
-                                <div class="glassmorphism-light rounded-2xl p-4 text-center">
-                                    <div class="text-white text-sm opacity-80 mb-1">Suhu Rata-rata</div>
-                                    <div class="text-white text-xl font-bold">32°C</div>
-                                </div>
-                                <div class="glassmorphism-light rounded-2xl p-4 text-center">
-                                    <div class="text-white text-sm opacity-80 mb-1">Area Terpanas</div>
-                                    <div class="text-white text-xl font-bold">38°C</div>
-                                </div>
-                                <div class="glassmorphism-light rounded-2xl p-4 text-center">
-                                    <div class="text-white text-sm opacity-80 mb-1">Area Terdingin</div>
-                                    <div class="text-white text-xl font-bold">20°C</div>
-                                </div>
-                                <div class="glassmorphism-light rounded-2xl p-4 text-center">
-                                    <div class="text-white text-sm opacity-80 mb-1">Update Terakhir</div>
-                                    <div class="text-white text-sm font-bold">2 menit lalu</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="text-mode text-sm font-semibold mb-2">
+                      Kelembapan
                     </div>
+                    <div class="text-mode text-xl font-bold" id="humidity">
+                      75%
+                    </div>
+                  </div>
+                  <div
+                    class="text-center glassmorphism-light rounded-2xl p-6 interactive-element"
+                  >
+                    <div class="flex justify-center mb-3">
+                      <svg
+                        class="w-8 h-8 text-mode"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                        />
+                      </svg>
+                    </div>
+                    <div class="text-mode text-sm font-semibold mb-2">
+                      Indeks UV
+                    </div>
+                    <div class="text-mode text-xl font-bold" id="uvIndex">
+                      8
+                    </div>
+                    <div class="text-mode text-xs opacity-80">
+                      Sangat tinggi
+                    </div>
+                  </div>
+                  <div
+                    class="text-center glassmorphism-light rounded-2xl p-6 interactive-element"
+                  >
+                    <div class="flex justify-center mb-3">
+                      <svg
+                        class="w-8 h-8 text-mode"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M2 17h20v2H2zm1.15-4.05L4 12l.85.95L5.7 12l-.85-.95L4 10.1l-.85.95L2.3 12l.85.95zM22 12l-.85-.95L20.3 12l.85.95L22 13.9l.85-.95L23.7 12l-.85-.95L22 12zM12 2l.85.95L13.7 2l-.85-.95L12 .1l-.85.95L10.3 2l.85-.95L12 2zM12 22l-.85-.95L10.3 22l.85-.95L12 20.1l.85.95L13.7 22l-.85.95L12 22z"
+                        />
+                      </svg>
+                    </div>
+                    <div class="text-mode text-sm font-semibold mb-2">
+                      Kecepatan Angin
+                    </div>
+                    <div class="text-mode text-xl font-bold" id="windSpeed">
+                      12 km/jam
+                    </div>
+                  </div>
                 </div>
-            </div>
-            
-            <!-- Mobile Layout -->
-            <div class="lg:hidden">
-                <div class="glassmorphism-enhanced rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-white text-xl font-bold">Peta Panas Jepara</h3>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-2 h-2 bg-green-500 rounded-full pulse-gentle"></div>
-                            <span class="text-white text-xs">Live</span>
-                        </div>
+
+                <!-- Action Buttons -->
+                <div id="actionButton" class="grid grid-cols-3 gap-4">
+                  <button
+                    class="btn-glass rounded-2xl py-4 px-6 text-center interactive-element"
+                    data-section="heatmap"
+                  >
+                    <div class="text-mode text-sm font-semibold">
+                      Lihat Peta Panas
                     </div>
-                    
-                    <!-- Mobile Map -->
-                    <div class="glassmorphism-light rounded-2xl p-3 mb-4" style="height: 300px;">
-                        <div class="relative w-full h-full bg-gradient-to-br from-blue-400 via-green-400 to-yellow-400 rounded-xl overflow-hidden">
-                            <div id="heatmapGridMobile" class="absolute inset-0 grid grid-cols-4 grid-rows-3 gap-1 p-2">
-                                <!-- Mobile heatmap cells will be generated by JavaScript -->
-                            </div>
-                        </div>
+                  </button>
+                  <button
+                    class="btn-glass rounded-2xl py-4 px-6 text-center interactive-element"
+                    data-section="forecast"
+                  >
+                    <div class="text-mode text-sm font-semibold">
+                      Prediksi<br />7 Hari
                     </div>
-                    
-                    <!-- Mobile Controls -->
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div class="glassmorphism-light rounded-2xl p-4">
-                            <div class="text-white text-sm font-semibold mb-2">Suhu Rata-rata</div>
-                            <div class="text-white text-2xl font-bold">32°C</div>
-                        </div>
-                        <div class="glassmorphism-light rounded-2xl p-4">
-                            <div class="text-white text-sm font-semibold mb-2">Area Terpanas</div>
-                            <div class="text-white text-2xl font-bold">38°C</div>
-                        </div>
+                  </button>
+                  <button
+                    class="btn-glass rounded-2xl py-4 px-6 text-center interactive-element"
+                    data-section="recommendations"
+                  >
+                    <div class="text-mode text-sm font-semibold">
+                      Rekomendasi<br />Kesehatan
                     </div>
-                    
-                    <!-- Mobile Legend -->
-                    <div class="glassmorphism-light rounded-2xl p-4">
-                        <div class="text-white text-sm font-semibold mb-3">Legenda Suhu</div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-red-500 rounded"></div>
-                                <span class="text-white text-xs">Sangat Panas</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-orange-500 rounded"></div>
-                                <span class="text-white text-xs">Panas</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-yellow-500 rounded"></div>
-                                <span class="text-white text-xs">Hangat</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-green-500 rounded"></div>
-                                <span class="text-white text-xs">Nyaman</span>
-                            </div>
-                        </div>
-                    </div>
+                  </button>
                 </div>
+              </div>
             </div>
-        </section>
+
+            <!-- Right Column - Additional Info -->
+            <div class="col-span-4">
+              <div
+                class="glassmorphism-light rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced"
+              >
+                <h3 class="text-mode text-xl font-bold mb-4 text-center">
+                  Informasi Tambahan
+                </h3>
+                <div class="space-y-4">
+                  <div class="glassmorphism-medium rounded-2xl p-4 text-center">
+                    <div class="text-mode text-sm opacity-80 mb-2">
+                      Tekanan Udara
+                    </div>
+                    <div class="text-mode text-2xl font-bold" id="pressure">
+                      1013 hPa
+                    </div>
+                  </div>
+                  <div class="glassmorphism-medium rounded-2xl p-4 text-center">
+                    <div class="text-mode text-sm opacity-80 mb-2">
+                      Indeks Kualitas Udara
+                    </div>
+                    <div class="text-mode text-2xl font-bold" id="airQuality">
+                      Baik
+                    </div>
+                  </div>
+                  <div class="glassmorphism-medium rounded-2xl p-4 text-center">
+                    <div class="text-mode text-sm opacity-80 mb-2">
+                      Visibilitas
+                    </div>
+                    <div class="text-mode text-2xl font-bold" id="visibility">
+                      10 km
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile/Tablet Layout -->
+        <div class="lg:hidden">
+          <!-- Current Weather Card -->
+          <div
+            class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced"
+          >
+            <!-- Temperature Display -->
+            <div class="text-center mb-6">
+              <div
+                class="text-8xl font-bold text-mode text-glow mb-2 pulse-gentle"
+                id="currentTempMobile"
+              >
+                34°
+              </div>
+              <div
+                class="text-mode text-xl font-semibold mb-1"
+                id="weatherConditionMobile"
+              >
+                Cerah Berawan
+              </div>
+              <div class="text-mode text-sm opacity-80" id="feelsLikeMobile">
+                Terasa seperti: 39°
+              </div>
+            </div>
+
+            <!-- Warning Card -->
+            <div
+              class="glassmorphism-card rounded-2xl p-4 mb-6 interactive-element"
+            >
+              <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                  <svg
+                    class="w-8 h-8 text-mode"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"
+                    />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-mode text-lg font-bold mb-2">
+                    LEVEL EKSTREM
+                  </h3>
+                  <p class="text-mode text-sm leading-relaxed">
+                    AI memprediksi resiko dehidrasi sangat tinggi. Hindari
+                    aktivitas di luar ruangan antara pukul 11.00 - 15.00
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weather Stats -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+              <div
+                class="text-center glassmorphism-light rounded-2xl p-4 interactive-element"
+              >
+                <div class="flex justify-center mb-2">
+                  <svg
+                    class="w-6 h-6 text-mode"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                    />
+                  </svg>
+                </div>
+                <div class="text-mode text-xs font-semibold mb-1">
+                  Kelembapan
+                </div>
+                <div class="text-mode text-lg font-bold" id="humidityMobile">
+                  75%
+                </div>
+              </div>
+              <div
+                class="text-center glassmorphism-light rounded-2xl p-4 interactive-element"
+              >
+                <div class="flex justify-center mb-2">
+                  <svg
+                    class="w-6 h-6 text-mode"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    />
+                  </svg>
+                </div>
+                <div class="text-mode text-xs font-semibold mb-1">
+                  Indeks UV
+                </div>
+                <div class="text-mode text-lg font-bold" id="uvIndexMobile">
+                  8
+                </div>
+              </div>
+              <div
+                class="text-center glassmorphism-light rounded-2xl p-4 interactive-element"
+              >
+                <div class="flex justify-center mb-2">
+                  <svg
+                    class="w-6 h-6 text-mode"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M2 17h20v2H2zm1.15-4.05L4 12l.85.95L5.7 12l-.85-.95L4 10.1l-.85.95L2.3 12l.85.95zM22 12l-.85-.95L20.3 12l.85.95L22 13.9l.85-.95L23.7 12l-.85-.95L22 12zM12 2l.85.95L13.7 2l-.85-.95L12 .1l-.85.95L10.3 2l.85-.95L12 2zM12 22l-.85-.95L10.3 22l.85-.95L12 20.1l.85.95L13.7 22l-.85.95L12 22z"
+                    />
+                  </svg>
+                </div>
+                <div class="text-mode text-xs font-semibold mb-1">Angin</div>
+                <div class="text-mode text-lg font-bold" id="windSpeedMobile">
+                  12 km/jam
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="actionButton" class="grid grid-cols-2 gap-3">
+              <button
+                class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element"
+                data-section="forecast"
+              >
+                <div class="text-mode text-sm font-semibold">
+                  Prediksi 7 Hari
+                </div>
+              </button>
+              <button
+                class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element"
+                data-section="recommendations"
+              >
+                <div class="text-mode text-sm font-semibold">Rekomendasi</div>
+              </button>
+              <button
+                class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element"
+                data-section="heatmap"
+              >
+                <div class="text-mode text-sm font-semibold">Peta Panas</div>
+              </button>
+              <button
+                class="btn-glass rounded-2xl py-3 px-4 text-center interactive-element"
+                onclick="ChatAI.toggleChat()"
+              >
+                <div class="text-mode text-sm font-semibold">Chat AI</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Forecast Section -->
+      <section id="forecastSection" class="section">
+        <div
+          class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced"
+        >
+          <div class="text-center mb-8">
+            <h2 class="text-mode text-3xl font-bold mb-2">
+              Prediksi Cuaca 7 Hari
+            </h2>
+            <p id="textRamalan" class="text-mode text-lg opacity-80">
+              Ramalan cuaca untuk Jepara
+            </p>
+          </div>
+
+          <!-- Forecast List -->
+          <div id="forecastList" class="space-y-4 mb-8">
+            <!-- Forecast items will be generated by JavaScript -->
+          </div>
+
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Temperature Chart -->
+            <div class="glassmorphism-light rounded-2xl p-6">
+              <h3 class="text-mode text-xl font-bold mb-4 text-center">
+                Grafik Suhu
+              </h3>
+              <div id="temperatureChart" class="chart-container">
+                <!-- Chart will be generated by JavaScript -->
+              </div>
+            </div>
+
+            <!-- Precipitation Chart -->
+            <div class="glassmorphism-light rounded-2xl p-6">
+              <h3 class="text-mode text-xl font-bold mb-4 text-center">
+                Grafik Presipitasi
+              </h3>
+              <div id="precipitationChart" class="chart-container">
+                <!-- Chart will be generated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recommendations Section -->
+      <section id="recommendationsSection" class="section">
+        <div
+          class="glassmorphism-enhanced rounded-3xl p-8 mb-6 fade-in-up card-hover-enhanced"
+        >
+          <div class="text-center mb-8">
+            <h2 class="text-mode text-3xl font-bold mb-2">Rekomendasi AI</h2>
+            <p class="text-mode text-lg opacity-80">
+              Saran kesehatan berdasarkan kondisi cuaca
+            </p>
+          </div>
+
+          <!-- Recommendations List -->
+          <div id="recommendationsList" class="space-y-6">
+            <!-- Recommendation items will be generated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Heatmap Section -->
+      <section id="heatmapSection" class="section">
+        <!-- Desktop Layout -->
+        <div class="hidden lg:block">
+          <div class="grid grid-cols-12 gap-6">
+            <!-- Left Column - Map Controls -->
+            <div class="col-span-4">
+              <div
+                class="glassmorphism-enhanced rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced"
+              >
+                <h3 class="text-mode text-xl font-bold mb-4 text-center">
+                  Kontrol Peta
+                </h3>
+
+                <!-- Temperature Range -->
+                <div class="mb-6">
+                  <label class="text-mode text-sm font-semibold mb-2 block"
+                    >Rentang Suhu</label
+                  >
+                  <div class="glassmorphism-light rounded-2xl p-4">
+                    <div class="flex justify-between text-mode text-sm mb-2">
+                      <span>20°C</span>
+                      <span>40°C</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="20"
+                      max="40"
+                      value="34"
+                      class="w-full h-2 bg-mode rounded-lg appearance-none cursor-pointer"
+                      id="tempRange"
+                    />
+                    <div
+                      class="text-center text-mode text-lg font-bold mt-2"
+                      id="currentTempRange"
+                    >
+                      34°C
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Weather Layers -->
+                <div class="mb-6">
+                  <label class="text-mode text-sm font-semibold mb-3 block"
+                    >Layer Cuaca</label
+                  >
+                  <div class="space-y-3">
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked
+                        class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                      />
+                      <span class="text-mode text-sm">Suhu</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                      />
+                      <span class="text-mode text-sm">Kelembapan</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                      />
+                      <span class="text-mode text-sm">Indeks UV</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                      />
+                      <span class="text-mode text-sm">Kecepatan Angin</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="mb-6">
+                  <label class="text-mode text-sm font-semibold mb-3 block"
+                    >Legenda Suhu</label
+                  >
+                  <div class="glassmorphism-light rounded-2xl p-4">
+                    <div class="space-y-2">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 bg-red-500 rounded"></div>
+                        <span class="text-mode text-xs"
+                          >Sangat Panas (35°+)</span
+                        >
+                      </div>
+                      <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 bg-orange-500 rounded"></div>
+                        <span class="text-mode text-xs">Panas (30-35°)</span>
+                      </div>
+                      <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                        <span class="text-mode text-xs">Hangat (25-30°)</span>
+                      </div>
+                      <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 bg-green-500 rounded"></div>
+                        <span class="text-mode text-xs">Nyaman (20-25°)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Time Controls -->
+                <div>
+                  <label class="text-mode text-sm font-semibold mb-3 block"
+                    >Waktu</label
+                  >
+                  <div id="buttonTime" class="rounded-2xl p-4">
+                    <div class="grid grid-cols-2 gap-2">
+                      <button
+                        class="btn-glass rounded-xl py-2 px-3 text-center interactive-element"
+                      >
+                        <div class="text-mode text-xs font-semibold">
+                          Sekarang
+                        </div>
+                      </button>
+                      <button
+                        class="btn-glass rounded-xl py-2 px-3 text-center interactive-element"
+                      >
+                        <div class="text-mode text-xs font-semibold">3 Jam</div>
+                      </button>
+                      <button
+                        class="btn-glass rounded-xl py-2 px-3 text-center interactive-element"
+                      >
+                        <div class="text-mode text-xs font-semibold">6 Jam</div>
+                      </button>
+                      <button
+                        class="btn-glass rounded-xl py-2 px-3 text-center interactive-element"
+                      >
+                        <div class="text-mode text-xs font-semibold">
+                          24 Jam
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column - Interactive Map -->
+            <div class="col-span-8">
+              <div
+                class="glassmorphism-enhanced rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced"
+              >
+                <div class="flex items-center justify-between mb-6">
+                  <h3 class="text-mode text-2xl font-bold">
+                    Peta Panas Jepara
+                  </h3>
+                  <div class="flex items-center space-x-2">
+                    <div
+                      class="w-3 h-3 bg-green-500 rounded-full pulse-gentle"
+                    ></div>
+                    <span class="text-mode text-sm">Live Data</span>
+                  </div>
+                </div>
+
+                <!-- Map Container -->
+                <div
+                  class="relative rounded-2xl p-4 mb-6"
+                  style="height: 500px"
+                >
+                  <div
+                    class="relative w-full h-full bg-gradient-to-br from-blue-400 via-green-400 to-yellow-400 rounded-xl overflow-hidden"
+                  >
+                    <!-- Map Grid -->
+                    <div
+                      id="heatmapGrid"
+                      class="absolute inset-0 grid grid-cols-8 grid-rows-6 gap-1 p-2"
+                    >
+                      <!-- Heatmap cells will be generated by JavaScript -->
+                    </div>
+
+                    <!-- Map Overlay Info -->
+                    <div
+                      class="absolute top-4 left-4 glassmorphism-medium rounded-xl p-3"
+                    >
+                      <div class="text-mode text-sm font-semibold">Jepara</div>
+                      <div class="text-mode text-xs opacity-80">
+                        Koordinat: -6.5944, 110.6717
+                      </div>
+                    </div>
+
+                    <!-- Zoom Controls -->
+                    <div
+                      class="absolute bottom-4 right-4 flex flex-col space-y-2"
+                    >
+                      <button
+                        class="glassmorphism-medium rounded-lg p-2 text-mode hover:scale-110 transition-transform"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                        </svg>
+                      </button>
+                      <button
+                        class="glassmorphism-medium rounded-lg p-2 text-mode hover:scale-110 transition-transform"
+                      >
+                        <svg
+                          class="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M19 13H5v-2h14v2z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Map Stats -->
+                <div class="grid grid-cols-4 gap-4">
+                  <div class="glassmorphism-light rounded-2xl p-4 text-center">
+                    <div class="text-mode text-sm opacity-80 mb-1">
+                      Suhu Rata-rata
+                    </div>
+                    <div class="text-mode text-xl font-bold">32°C</div>
+                  </div>
+                  <div class="glassmorphism-light rounded-2xl p-4 text-center">
+                    <div class="text-mode text-sm opacity-80 mb-1">
+                      Area Terpanas
+                    </div>
+                    <div class="text-mode text-xl font-bold">38°C</div>
+                  </div>
+                  <div class="glassmorphism-light rounded-2xl p-4 text-center">
+                    <div class="text-mode text-sm opacity-80 mb-1">
+                      Area Terdingin
+                    </div>
+                    <div class="text-mode text-xl font-bold">20°C</div>
+                  </div>
+                  <div class="glassmorphism-light rounded-2xl p-4 text-center">
+                    <div class="text-mode text-sm opacity-80 mb-1">
+                      Update Terakhir
+                    </div>
+                    <div class="text-mode text-sm font-bold">2 menit lalu</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Layout -->
+        <div class="lg:hidden">
+          <div
+            class="glassmorphism-enhanced rounded-3xl p-6 mb-6 fade-in-up card-hover-enhanced"
+          >
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-mode text-xl font-bold">Peta Panas Jepara</h3>
+              <div class="flex items-center space-x-2">
+                <div
+                  class="w-2 h-2 bg-green-500 rounded-full pulse-gentle"
+                ></div>
+                <span class="text-mode text-xs">Live</span>
+              </div>
+            </div>
+
+            <!-- Mobile Map -->
+            <div
+              class="glassmorphism-light rounded-2xl p-3 mb-4"
+              style="height: 300px"
+            >
+              <div
+                class="relative w-full h-full bg-gradient-to-br from-blue-400 via-green-400 to-yellow-400 rounded-xl overflow-hidden"
+              >
+                <div
+                  id="heatmapGridMobile"
+                  class="absolute inset-0 grid grid-cols-4 grid-rows-3 gap-1 p-2"
+                >
+                  <!-- Mobile heatmap cells will be generated by JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="glassmorphism-light rounded-2xl p-4">
+                <div class="text-mode text-sm font-semibold mb-2">
+                  Suhu Rata-rata
+                </div>
+                <div class="text-mode text-2xl font-bold">32°C</div>
+              </div>
+              <div class="glassmorphism-light rounded-2xl p-4">
+                <div class="text-mode text-sm font-semibold mb-2">
+                  Area Terpanas
+                </div>
+                <div class="text-mode text-2xl font-bold">38°C</div>
+              </div>
+            </div>
+
+            <!-- Mobile Legend -->
+            <div class="glassmorphism-light rounded-2xl p-4">
+              <div class="text-mode text-sm font-semibold mb-3">
+                Legenda Suhu
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-red-500 rounded"></div>
+                  <span class="text-mode text-xs">Sangat Panas</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-orange-500 rounded"></div>
+                  <span class="text-mode text-xs">Panas</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-yellow-500 rounded"></div>
+                  <span class="text-mode text-xs">Hangat</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-green-500 rounded"></div>
+                  <span class="text-mode text-xs">Nyaman</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- AI Chat Widget -->
-    <div id="aiChatWidget" class="fixed bottom-6 right-6 z-50">
-        <!-- Chat Toggle Button -->
-        <button id="chatToggle" class="glassmorphism-medium rounded-full p-4 shadow-2xl hover:scale-110 transition-all duration-300 interactive-element">
-            <svg id="chatIcon" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+    <div id="aiChatWidget" class="fixed bottom-6 right-6 z-[99999]">
+      <!-- Chat Toggle Button -->
+      <button
+        id="chatToggle"
+        class="glassmorphism-medium rounded-full p-4 shadow-2xl hover:scale-110 transition-all duration-300 interactive-element"
+      >
+        <svg
+          id="chatIcon"
+          class="w-6 h-6 text-mode"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"
+          />
+        </svg>
+        <svg
+          id="closeIcon"
+          class="w-6 h-6 text-mode hidden"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
+        </svg>
+        <!-- Notification Badge -->
+        <div
+          id="chatBadge"
+          class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full pulse-gentle"
+        ></div>
+      </button>
+
+      <!-- Chat Window -->
+      <div
+        id="chatWindow"
+        class="hidden glassmorphism-enhanced rounded-2xl shadow-2xl w-80 h-96 mb-4 flex flex-col"
+      >
+        <!-- Chat Header -->
+        <div
+          class="glassmorphism-medium rounded-t-2xl p-4 flex items-center justify-between"
+        >
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
+            >
+              <svg
+                class="w-4 h-4 text-mode"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                />
+              </svg>
+            </div>
+            <div>
+              <div class="text-mode text-sm font-semibold">
+                WeatherAI Assistant
+              </div>
+              <div class="text-mode text-xs opacity-80">Online</div>
+            </div>
+          </div>
+          <button
+            id="minimizeChat"
+            class="text-mode opacity-60 hover:opacity-100 transition-opacity"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19 13H5v-2h14v2z" />
             </svg>
-            <svg id="closeIcon" class="w-6 h-6 text-white hidden" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
-            <!-- Notification Badge -->
-            <div id="chatBadge" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full pulse-gentle"></div>
-        </button>
-        
-        <!-- Chat Window -->
-        <div id="chatWindow" class="hidden glassmorphism-enhanced rounded-2xl shadow-2xl w-80 h-96 mb-4 flex flex-col">
-            <!-- Chat Header -->
-            <div class="glassmorphism-medium rounded-t-2xl p-4 flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-white text-sm font-semibold">WeatherAI Assistant</div>
-                        <div class="text-white text-xs opacity-80">Online</div>
-                    </div>
-                </div>
-                <button id="minimizeChat" class="text-white opacity-60 hover:opacity-100 transition-opacity">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 13H5v-2h14v2z"/>
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Chat Messages -->
-            <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3">
-                <!-- Welcome Message -->
-                <div class="flex items-start space-x-2">
-                    <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                        </svg>
-                    </div>
-                    <div class="glassmorphism-light rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                        <div class="text-white text-sm">Halo! Saya WeatherAI Assistant. Saya bisa membantu Anda dengan informasi cuaca, prediksi, dan rekomendasi kesehatan. Ada yang bisa saya bantu? 😊</div>
-                    </div>
-                </div>
-                
-                <!-- Quick Actions -->
-                <div class="flex flex-wrap gap-2 mt-3">
-                    <button class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-white text-xs hover:scale-105 transition-transform" data-action="weather">
-                        🌤️ Cuaca Hari Ini
-                    </button>
-                    <button class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-white text-xs hover:scale-105 transition-transform" data-action="forecast">
-                        📅 Prediksi 7 Hari
-                    </button>
-                    <button class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-white text-xs hover:scale-105 transition-transform" data-action="recommendations">
-                        💡 Rekomendasi
-                    </button>
-                    <button class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-white text-xs hover:scale-105 transition-transform" data-action="health">
-                        🏥 Tips Kesehatan
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Chat Input -->
-            <div class="glassmorphism-medium rounded-b-2xl p-4">
-                <div class="flex items-center space-x-2">
-                    <input type="text" id="chatInput" placeholder="Tanya tentang cuaca..." class="flex-1 bg-transparent text-white placeholder-white placeholder-opacity-60 outline-none text-sm">
-                    <button id="sendMessage" class="glassmorphism-light rounded-full p-2 hover:scale-110 transition-transform">
-                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+          </button>
         </div>
+
+        <!-- Chat Messages -->
+        <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3">
+          <!-- Welcome Message -->
+          <div class="flex items-start space-x-2">
+            <div
+              class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0"
+            >
+              <svg
+                class="w-3 h-3 text-mode"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                />
+              </svg>
+            </div>
+            <div
+              class="glassmorphism-light rounded-2xl rounded-tl-sm p-3 max-w-xs"
+            >
+              <div class="text-mode text-sm">
+                Halo! Saya WeatherAI Assistant. Saya bisa membantu Anda dengan
+                informasi cuaca, prediksi, dan rekomendasi kesehatan. Ada yang
+                bisa saya bantu? 😊
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="flex flex-wrap gap-2 mt-3">
+            <button
+              class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-mode text-xs hover:scale-105 transition-transform"
+              data-action="weather"
+            >
+              🌤️ Cuaca Hari Ini
+            </button>
+            <button
+              class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-mode text-xs hover:scale-105 transition-transform"
+              data-action="forecast"
+            >
+              📅 Prediksi 7 Hari
+            </button>
+            <button
+              class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-mode text-xs hover:scale-105 transition-transform"
+              data-action="recommendations"
+            >
+              💡 Rekomendasi
+            </button>
+            <button
+              class="quick-action-btn glassmorphism-light rounded-full px-3 py-1 text-mode text-xs hover:scale-105 transition-transform"
+              data-action="health"
+            >
+              🏥 Tips Kesehatan
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="glassmorphism-medium rounded-b-2xl p-4">
+          <div class="flex items-center space-x-2">
+            <input
+              type="text"
+              id="chatInput"
+              placeholder="Tanya tentang cuaca..."
+              class="flex-1 bg-transparent placeholder-opacity-60 outline-none text-sm"
+            />
+            <button
+              id="sendMessage"
+              class="glassmorphism-light rounded-full p-2 hover:scale-110 transition-transform"
+            >
+              <svg
+                class="w-4 h-4 text-mode"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->
     <footer class="glassmorphism-light rounded-t-3xl mx-4 mt-16 px-6 py-8">
-        <div class="max-w-7xl mx-auto">
-            <!-- Footer Content -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-                <!-- About Section -->
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-white text-lg font-bold">WeatherAI</h3>
-                    </div>
-                    <p class="text-white text-sm opacity-80 leading-relaxed">
-                        Platform cuaca interaktif dengan AI recommendations untuk membantu Anda tetap sehat dan aman dalam berbagai kondisi cuaca.
-                    </p>
-                    <div class="flex space-x-3">
-                        <a href="#" class="text-white opacity-60 hover:opacity-100 transition-opacity">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-white opacity-60 hover:opacity-100 transition-opacity">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-white opacity-60 hover:opacity-100 transition-opacity">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.746-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div class="space-y-4">
-                    <h4 class="text-white text-lg font-semibold">Navigasi Cepat</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#dashboardSection" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Dashboard</a></li>
-                        <li><a href="#forecastSection" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Prediksi 7 Hari</a></li>
-                        <li><a href="#recommendationsSection" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Rekomendasi AI</a></li>
-                        <li><a href="#heatmapSection" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Peta Panas</a></li>
-                        <li><button onclick="ChatAI.toggleChat()" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Chat AI Assistant</button></li>
-                    </ul>
-                </div>
-
-                <!-- Weather Info -->
-                <div class="space-y-4">
-                    <h4 class="text-white text-lg font-semibold">Informasi Cuaca</h4>
-                    <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="text-white text-sm opacity-80">Lokasi:</span>
-                            <span class="text-white text-sm font-semibold">Jepara, Indonesia</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-white text-sm opacity-80">Koordinat:</span>
-                            <span class="text-white text-sm font-semibold">-6.5944, 110.6717</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-white text-sm opacity-80">Zona Waktu:</span>
-                            <span class="text-white text-sm font-semibold">WIB (UTC+7)</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-white text-sm opacity-80">Update Terakhir:</span>
-                            <span class="text-white text-sm font-semibold" id="lastUpdate">2 menit lalu</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contact & Support -->
-                <div class="space-y-4">
-                    <h4 class="text-white text-lg font-semibold">Kontak & Dukungan</h4>
-                    <div class="space-y-2">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-white opacity-60" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                            <span class="text-white text-sm opacity-80">support@weatherai.id</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-white opacity-60" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
-                            <span class="text-white text-sm opacity-80">24/7 AI Support</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-4 h-4 text-white opacity-60" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                            <span class="text-white text-sm opacity-80">FAQ & Help Center</span>
-                        </div>
-                    </div>
-                </div>
+      <div class="max-w-7xl mx-auto">
+        <!-- Footer Content -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          <!-- About Section -->
+          <div class="space-y-4">
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4 text-mode"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-mode text-lg font-bold">WeatherAI</h3>
             </div>
-
-            <!-- Footer Bottom -->
-            <div class="border-t border-white border-opacity-20 pt-6">
-                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                    <div class="text-white text-sm opacity-80">
-                        © 2024 WeatherAI Dashboard. Dibuat dengan ❤️ untuk masyarakat Jepara.
-                    </div>
-                    <div class="flex items-center space-x-6">
-                        <a href="#" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Privacy Policy</a>
-                        <a href="#" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Terms of Service</a>
-                        <a href="#" class="text-white text-sm opacity-80 hover:opacity-100 transition-opacity">Cookie Policy</a>
-                    </div>
-                </div>
-                
-                <!-- Technology Stack -->
-                <div class="mt-4 pt-4 border-t border-white border-opacity-10">
-                    <div class="text-center">
-                        <p class="text-white text-xs opacity-60 mb-2">Powered by:</p>
-                        <div class="flex justify-center items-center space-x-4">
-                            <span class="text-white text-xs opacity-60">HTML5</span>
-                            <span class="text-white text-xs opacity-60">•</span>
-                            <span class="text-white text-xs opacity-60">CSS3</span>
-                            <span class="text-white text-xs opacity-60">•</span>
-                            <span class="text-white text-xs opacity-60">JavaScript ES6+</span>
-                            <span class="text-white text-xs opacity-60">•</span>
-                            <span class="text-white text-xs opacity-60">Tailwind CSS</span>
-                            <span class="text-white text-xs opacity-60">•</span>
-                            <span class="text-white text-xs opacity-60">AI Integration</span>
-                        </div>
-                    </div>
-                </div>
+            <p class="text-mode text-sm opacity-80 leading-relaxed">
+              Platform cuaca interaktif dengan AI recommendations untuk membantu
+              Anda tetap sehat dan aman dalam berbagai kondisi cuaca.
+            </p>
+            <div class="flex space-x-3">
+              <a
+                href="#"
+                class="text-mode opacity-60 hover:opacity-100 transition-opacity"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="text-mode opacity-60 hover:opacity-100 transition-opacity"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="text-mode opacity-60 hover:opacity-100 transition-opacity"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.746-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"
+                  />
+                </svg>
+              </a>
             </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="space-y-4">
+            <h4 class="text-mode text-lg font-semibold">Navigasi Cepat</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#dashboardSection"
+                  class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#forecastSection"
+                  class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                  >Prediksi 7 Hari</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#recommendationsSection"
+                  class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                  >Rekomendasi AI</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#heatmapSection"
+                  class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                  >Peta Panas</a
+                >
+              </li>
+              <li>
+                <button
+                  onclick="ChatAI.toggleChat()"
+                  class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                >
+                  Chat AI Assistant
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Weather Info -->
+          <div class="space-y-4">
+            <h4 class="text-mode text-lg font-semibold">Informasi Cuaca</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between">
+                <span class="text-mode text-sm opacity-80">Lokasi:</span>
+                <span class="text-mode text-sm font-semibold"
+                  >Jepara, Indonesia</span
+                >
+              </div>
+              <div class="flex justify-between">
+                <span class="text-mode text-sm opacity-80">Koordinat:</span>
+                <span class="text-mode text-sm font-semibold"
+                  >-6.5944, 110.6717</span
+                >
+              </div>
+              <div class="flex justify-between">
+                <span class="text-mode text-sm opacity-80">Zona Waktu:</span>
+                <span class="text-mode text-sm font-semibold"
+                  >WIB (UTC+7)</span
+                >
+              </div>
+              <div class="flex justify-between">
+                <span class="text-mode text-sm opacity-80"
+                  >Update Terakhir:</span
+                >
+                <span class="text-mode text-sm font-semibold" id="lastUpdate"
+                  >2 menit lalu</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact & Support -->
+          <div class="space-y-4">
+            <h4 class="text-mode text-lg font-semibold">Kontak & Dukungan</h4>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <svg
+                  class="w-4 h-4 text-mode opacity-60"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  />
+                </svg>
+                <span class="text-mode text-sm opacity-80"
+                  >support@weatherai.id</span
+                >
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg
+                  class="w-4 h-4 text-mode opacity-60"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
+                <span class="text-mode text-sm opacity-80"
+                  >24/7 AI Support</span
+                >
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg
+                  class="w-4 h-4 text-mode opacity-60"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <span class="text-mode text-sm opacity-80"
+                  >FAQ & Help Center</span
+                >
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Footer Bottom -->
+        <div class="border-t border-white border-opacity-20 pt-6">
+          <div
+            class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
+          >
+            <div class="text-mode text-sm opacity-80">
+              © 2024 WeatherAI Dashboard. Dibuat dengan ❤️ untuk masyarakat
+              Jepara.
+            </div>
+            <div class="flex items-center space-x-6">
+              <a
+                href="#"
+                class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                >Privacy Policy</a
+              >
+              <a
+                href="#"
+                class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                >Terms of Service</a
+              >
+              <a
+                href="#"
+                class="text-mode text-sm opacity-80 hover:opacity-100 transition-opacity"
+                >Cookie Policy</a
+              >
+            </div>
+          </div>
+
+          <!-- Technology Stack -->
+          <div class="mt-4 pt-4 border-t border-white border-opacity-10">
+            <div class="text-center">
+              <p class="text-mode text-xs opacity-60 mb-2">Powered by:</p>
+              <div class="flex justify-center items-center space-x-4">
+                <span class="text-mode text-xs opacity-60">HTML5</span>
+                <span class="text-mode text-xs opacity-60">•</span>
+                <span class="text-mode text-xs opacity-60">CSS3</span>
+                <span class="text-mode text-xs opacity-60">•</span>
+                <span class="text-mode text-xs opacity-60"
+                  >JavaScript ES6+</span
+                >
+                <span class="text-mode text-xs opacity-60">•</span>
+                <span class="text-mode text-xs opacity-60">Tailwind CSS</span>
+                <span class="text-mode text-xs opacity-60">•</span>
+                <span class="text-mode text-xs opacity-60"
+                  >AI Integration</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </footer>
 
     <!-- JavaScript Files -->
-    <script src="js/weather-data.js"></script>
-    <script src="js/weather-app.js"></script>
-    <script src="js/chat-ai.js"></script>
-    <script src="js/weather-backend.js"></script>
-    <script src="js/weather-search.js"></script>
-    
+    <script type="module" src="js/weather-data.js"></script>
+    <script type="module" src="js/weather-app.js"></script>
+    <script type="module" src="js/weather-backend.js"></script>
+    <script type="module" src="js/weather-search.js"></script>
+    <script type="module" src="js/chat-ai.js"></script>
+
     <!-- Mobile Menu Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-            
-            // Ensure scrolling works
-            document.body.style.overflowY = 'auto';
-            document.documentElement.style.overflowY = 'auto';
-            
-            // Test scroll functionality
-            console.log('Scrolling enabled:', document.body.scrollHeight > window.innerHeight);
+      document.addEventListener("DOMContentLoaded", function () {
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
 
-            // Theme toggle
-            const themeToggle = document.getElementById('themeToggle');
-            const mobileThemeToggle = document.getElementById('mobileThemeToggle');
-            const root = document.documentElement;
-            const savedTheme = localStorage.getItem('theme');
-            
-            // Initialize theme
-            if (savedTheme === 'dark') {
-                root.classList.add('dark');
-                updateThemeKnobs(true);
-            } else {
-                updateThemeKnobs(false);
-            }
-            
-            // Function to update theme knob positions
-            function updateThemeKnobs(isDark) {
-                const themeKnob = document.getElementById('themeKnob');
-                const mobileThemeKnob = document.getElementById('mobileThemeKnob');
-                
-                if (themeKnob) {
-                    themeKnob.style.transform = isDark ? 'translateX(16px)' : 'translateX(0)';
-                }
-                if (mobileThemeKnob) {
-                    mobileThemeKnob.style.transform = isDark ? 'translateX(16px)' : 'translateX(0)';
-                }
-            }
-            
-            // Function to toggle theme
-            function toggleTheme() {
-                const isDark = root.classList.toggle('dark');
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                updateThemeKnobs(isDark);
-            }
-            
-            // Desktop theme toggle
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
-            }
-            
-            // Mobile theme toggle
-            if (mobileThemeToggle) {
-                mobileThemeToggle.addEventListener('click', toggleTheme);
-            }
-        });
+        if (mobileMenuBtn && mobileMenu) {
+          mobileMenuBtn.addEventListener("click", function () {
+            mobileMenu.classList.toggle("hidden");
+          });
+        }
+
+        // Ensure scrolling works
+        document.body.style.overflowY = "auto";
+        document.documentElement.style.overflowY = "auto";
+
+        // Test scroll functionality
+        console.log(
+          "Scrolling enabled:",
+          document.body.scrollHeight > window.innerHeight
+        );
+
+        // Theme toggle
+        const themeToggle = document.getElementById("themeToggle");
+        const mobileThemeToggle = document.getElementById("mobileThemeToggle");
+        const root = document.documentElement;
+        const savedTheme = localStorage.getItem("theme");
+        // Initialize theme
+        if (savedTheme === "dark") {
+          root.classList.add("dark");
+          updateThemeKnobs(true);
+        } else {
+          updateThemeKnobs(false);
+        }
+
+        // Function to update theme knob positions
+        function updateThemeKnobs(isDark) {
+          const themeKnob = document.getElementById("themeKnob");
+          const mobileThemeKnob = document.getElementById("mobileThemeKnob");
+
+          if (themeKnob) {
+            themeKnob.style.transform = isDark
+              ? "translateX(16px)"
+              : "translateX(0)";
+          }
+          if (mobileThemeKnob) {
+            mobileThemeKnob.style.transform = isDark
+              ? "translateX(16px)"
+              : "translateX(0)";
+          }
+        }
+
+        // Function to toggle theme
+        function toggleTheme() {
+          const isDark = root.classList.toggle("dark");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+          updateThemeKnobs(isDark);
+        }
+
+        // Desktop theme toggle
+        if (themeToggle) {
+          themeToggle.addEventListener("click", toggleTheme);
+        }
+
+        // Mobile theme toggle
+        if (mobileThemeToggle) {
+          mobileThemeToggle.addEventListener("click", toggleTheme);
+        }
+      });
     </script>
-</body>
+  </body>
 </html>

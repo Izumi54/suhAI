@@ -1,14 +1,27 @@
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* Hilangkan tombol default di Chrome/Safari */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-inner-spin-button {
+    display: none !important;
+    -webkit-appearance: none;
+}
 /* Enhanced Background with Animated Elements */
-.weather-gradient {
+/* .weather-gradient {
     background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #96CEB4 75%, #FFEAA7 100%);
-    background-size: 400% 400%;
+    background-size: 10% 10%;
     animation: gradientShift 15s ease infinite;
     position: relative;
     overflow: hidden;
-}
+} */
 
 /* Dark mode background overlay */
-.dark .weather-gradient {
+/* .dark .weather-gradient {
     background: radial-gradient(1200px 800px at 50% 0%, rgba(16,24,39,0.9) 0%, rgba(3,7,18,0.95) 60%, rgba(3,7,18,1) 100%);
 }
 
@@ -35,26 +48,26 @@
     bottom: 0;
     background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="60" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
     animation: sparkle 10s linear infinite;
-}
+} */
 
-@keyframes gradientShift {
+/* @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-}
+} */
 
-@keyframes float {
+/* @keyframes float {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
     50% { transform: translateY(-20px) rotate(180deg); }
-}
+} */
 
-@keyframes sparkle {
+/* @keyframes sparkle {
     0% { transform: translateX(0) translateY(0); }
     25% { transform: translateX(100px) translateY(-50px); }
     50% { transform: translateX(-50px) translateY(100px); }
     75% { transform: translateX(-100px) translateY(-25px); }
     100% { transform: translateX(0) translateY(0); }
-}
+} */
 
 /* Enhanced Glassmorphism */
 .glassmorphism {
@@ -76,12 +89,13 @@
 
 .glassmorphism-light {
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
+    /* backdrop-filter: blur(15px); */
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 
         0 4px 16px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
+    }
+
 
 .dark .glassmorphism-light {
     background: rgba(17, 25, 40, 0.45);
@@ -141,9 +155,16 @@
 
 .text-glow {
     text-shadow: 
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 20px rgba(255, 255, 255, 0.3),
-        0 0 30px rgba(255, 255, 255, 0.2);
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(255, 255, 255, 0.3),
+    0 0 30px rgba(255, 255, 255, 0.2);
+}
+:root.dark .text-glow{
+        text-shadow: 
+            0 0 10px rgba(0, 0, 0, 0.5),
+            0 0 20px rgba(0, 0, 0, 0.3),
+            0 0 30px rgba(255, 255, 255, 0.2);
+
 }
 
 /* Enhanced Hover Effects */
@@ -226,6 +247,34 @@
     background: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+}
+:root.dark #actionButton button {
+    background: rgba(17, 25, 40, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:root.dark #actionButton button:hover {
+  background: rgba(20, 20, 20, 0.3);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+}
+:root.dark #buttonTime button {
+    background: rgba(17, 25, 40, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: white !important;
+}
+
+:root.dark #buttonTime button:hover {
+  background: rgba(20, 20, 20, 0.3);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+}
+
+.text-mode {
+  color: black;
+  transition: text color 0.3s ease;
+}
+
+:root.dark .text-mode {
+  color: white;
 }
 
 /* Theme Toggle Styles */
@@ -459,8 +508,30 @@
 /* Chat Input Focus */
 #chatInput:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.384);
+
 }
+:root.dark #chatInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.253);
+}
+#chatInput {
+  background: rgba(0, 0, 0, 0.247);
+  color: rgb(0, 0, 0);
+  border-color: rgba(2, 2, 2, 0.966);
+}
+:root.dark #chatInput {
+  background: rgba(0, 0, 0, 0.247);
+  color: rgb(255, 255, 255);
+  border-color: rgba(2, 2, 2, 0.966);
+}
+#chatInput::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+:root.dark #chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
 
 /* Quick Action Buttons */
 .quick-action-btn {
@@ -524,6 +595,9 @@ nav.scrolled {
     height: 300px;
     width: 100%;
 }
+/* :root.dark .chart-container{
+color: black;
+} */
 
 
 .chart-bar {
@@ -577,7 +651,17 @@ footer .flex a:hover svg {
     transform: scale(1.2) rotate(5deg);
 }
 
+/* AQI */
+.aqi-good { color: #22c55e; }      /* Hijau */
+.aqi-moderate { color: #eab308; }  /* Kuning */
+.aqi-unhealthy { color: #f97316; } /* Oranye */
+.aqi-hazard { color: #dc2626; }    /* Merah */
+
 /* Temperature-based Backgrounds */
+
+.text-mode-dark {
+ color: rgba(0, 0, 0, 1);
+}
 .temp-hot {
     background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 25%, #FF6B6B 50%, #FF4757 75%, #FF3742 100%) !important;
 }
@@ -603,6 +687,26 @@ footer .flex a:hover svg {
     transform: scale(1.02);
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
+#weatherSearch, #mobileWeatherSearch {
+  background: rgba(255, 255, 255, 0.3);
+  color: rgb(0, 0, 0);
+  transition: all 0.3s ease;
+}
+
+:root.dark #weatherSearch, :root.dark  #mobileWeatherSearch {
+  background: rgba(0, 0, 0, 0.3);
+  color: rgb(255, 255, 255);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+#weatherSearch:focus,  #mobileWeatherSearch:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+:root.dark #weatherSearch:focus, :root.dark  #mobileWeatherSearch:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
 
 /* Search Suggestions */
 #searchSuggestions {
@@ -629,6 +733,7 @@ footer .flex a:hover svg {
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
+
 
 /* Temperature Conversion Button */
 #tempConvertBtn, #mobileTempConvertBtn {
@@ -662,7 +767,7 @@ footer .flex a:hover svg {
 }
 
 /* Mobile Optimizations */
-@media (max-width: 767px) {
+@media (max-width: 780px) {
     .section {
         padding: 1rem 0;
     }

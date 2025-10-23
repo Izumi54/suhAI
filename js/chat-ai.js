@@ -27,28 +27,24 @@ const ChatAI = {
     },
     
     
-    setupEventListeners() {
-        // Toggle chat window
-        this.elements.chatToggle.addEventListener('click', () => {
-            this.toggleChat();
-        });
-        
-        // Minimize chat
-        this.elements.minimizeChat.addEventListener('click', () => {
-            this.closeChat();
-        });
-        
-        // Send message
-        this.elements.sendMessage.addEventListener('click', () => {
-            this.sendMessage();
-        });
-        
-        // Enter key to send
-        this.elements.chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.sendMessage();
-            }
-        });
+  setupEventListeners() {
+  const e = this.elements;
+  
+  // Toggle chat window
+  if (e.chatToggle) e.chatToggle.addEventListener('click', () => this.toggleChat());
+
+  // Minimize chat
+  if (e.minimizeChat) e.minimizeChat.addEventListener('click', () => this.closeChat());
+
+  // Send message
+  if (e.sendMessage) e.sendMessage.addEventListener('click', () => this.sendMessage());
+
+  // Enter key
+  if (e.chatInput) e.chatInput.addEventListener('keypress', (ev) => {
+    if (ev.key === 'Enter') this.sendMessage();
+  });
+
+
         
         // Quick action buttons
         document.querySelectorAll('.quick-action-btn').forEach(btn => {
@@ -127,18 +123,18 @@ const ChatAI = {
             messageDiv.innerHTML = `
                 <div class="flex-1"></div>
                 <div class="glassmorphism-light rounded-2xl rounded-tr-sm p-3 max-w-xs">
-                    <div class="text-white text-sm">${text}</div>
+                    <div class="text-mode text-sm">${text}</div>
                 </div>
             `;
         } else {
             messageDiv.innerHTML = `
                 <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3 h-3 text-mode" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                     </svg>
                 </div>
                 <div class="glassmorphism-light rounded-2xl rounded-tl-sm p-3 max-w-xs">
-                    <div class="text-white text-sm whitespace-pre-line">${text}</div>
+                    <div class="text-mode text-sm whitespace-pre-line">${text}</div>
                 </div>
             `;
         }
@@ -163,7 +159,7 @@ const ChatAI = {
         
         typingDiv.innerHTML = `
             <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 text-mode" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                 </svg>
             </div>
@@ -265,3 +261,7 @@ const ChatAI = {
 
 // Export for global access
 window.ChatAI = ChatAI;
+document.addEventListener('DOMContentLoaded', () => {
+  ChatAI.init();
+});
+
