@@ -1,5 +1,5 @@
 {
-  "name": "weather-ai-website",
+  "name": "suhaI-dashboard",
   "version": "1.0.0",
   "description": "Website cuaca interaktif dengan desain glassmorphism dan AI recommendations",
   "main": "index.html",
@@ -27,12 +27,12 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/weather-ai-website.git"
+    "url": "https://github.com/yourusername/suhaI-dashboard.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/weather-ai-website/issues"
+    "url": "https://github.com/yourusername/suhaI-dashboard/issues"
   },
-  "homepage": "https://github.com/yourusername/weather-ai-website#readme",
+  "homepage": "https://github.com/yourusername/suhaI-dashboard#readme",
   "browserslist": [
     "> 1%",
     "last 2 versions",

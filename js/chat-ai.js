@@ -205,7 +205,7 @@ const ChatAI = {
             ],
             default: [
                 "Saya bisa membantu Anda dengan informasi cuaca, prediksi 7 hari, rekomendasi kesehatan, dan tips untuk kondisi cuaca saat ini. Ada yang spesifik ingin Anda tanyakan? 😊",
-                "Halo! Saya WeatherAI Assistant. Saya bisa memberikan informasi cuaca terkini, prediksi, dan saran kesehatan berdasarkan kondisi cuaca. Bagaimana saya bisa membantu Anda hari ini? 🌤️",
+                "Halo! Saya SuhAI Assistant. Saya bisa memberikan informasi cuaca terkini, prediksi, dan saran kesehatan berdasarkan kondisi cuaca. Bagaimana saya bisa membantu Anda hari ini? 🌤️",
                 "Saya di sini untuk membantu! Anda bisa bertanya tentang cuaca hari ini, prediksi minggu depan, atau tips kesehatan untuk kondisi cuaca panas. Apa yang ingin Anda ketahui? 💡"
             ]
         };

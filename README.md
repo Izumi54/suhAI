@@ -1,4 +1,4 @@
-# 🌤️ WeatherAI Dashboard
+# 🌤️ SuhAI Dashboard
 
 <div align="center">
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
@@ -10,7 +10,7 @@
 
 ## 🎯 Tentang Proyek
 
-**WeatherAI Dashboard** adalah aplikasi web cuaca interaktif yang menggabungkan teknologi modern dengan desain yang memukau. Website ini dirancang untuk memberikan informasi cuaca yang akurat dengan prediksi AI untuk kesehatan dan keselamatan pengguna.
+**SuhAI Dashboard** adalah aplikasi web cuaca interaktif yang menggabungkan teknologi modern dengan desain yang memukau. Website ini dirancang untuk memberikan informasi cuaca yang akurat dengan prediksi AI untuk kesehatan dan keselamatan pengguna.
 
 ### 🚀 Fitur Utama
 
@@ -29,7 +29,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    WEATHERAI DASHBOARD FLOW                     │
+│                    SUHAI DASHBOARD FLOW                         │
 └─────────────────────────────────────────────────────────────────┘
 
 📱 USER ENTERS WEBSITE
@@ -40,10 +40,10 @@
     ├── 📄 Load HTML Structure (index.html)
     ├── 🎨 Load CSS Styles (styles.css)
     ├── ⚙️ Load JavaScript Modules:
-    │   ├── weather-data.js (Data Management)
-    │   ├── weather-app.js (Main Application)
-    │   ├── weather-backend.js (API Integration)
-    │   ├── weather-search.js (Search Functionality)
+    │   ├── suhAI-data.js (Data Management)
+    │   ├── suhAI-app.js (Main Application)
+    │   ├── suhAI-backend.js (API Integration)
+    │   ├── suhAI-search.js (Search Functionality)
     │   └── chat-ai.js (AI Chat Assistant)
     │
     └── 🔄 Initialize Components
@@ -156,15 +156,15 @@ Website ini menggunakan konsep **glassmorphism** dengan:
 ## 📁 Struktur File & Penjelasan Kode
 
 ```
-weather-dashboard/
+suhaI-dashboard/
 ├── index.html              # Main HTML file (Single-page application)
 ├── css/
 │   └── styles.css          # All custom CSS styles & animations
 ├── js/
-│   ├── weather-data.js     # Data management & UI components
-│   ├── weather-app.js      # Main application logic
-│   ├── weather-backend.js  # API integration & data fetching
-│   ├── weather-search.js  # Search functionality
+│   ├── suhAI-data.js       # Data management & UI components
+│   ├── suhAI-app.js        # Main application logic
+│   ├── suhAI-backend.js    # API integration & data fetching
+│   ├── suhAI-search.js     # Search functionality
 │   └── chat-ai.js          # AI chat functionality
 ├── package.json            # Project configuration
 └── README.md               # Project documentation
@@ -252,7 +252,7 @@ weather-dashboard/
 }
 ```
 
-#### ⚙️ **js/weather-data.js** - Data Management
+#### ⚙️ **js/suhAI-data.js** - Data Management
 ```javascript
 // Weather Data Object
 const WeatherData = {
@@ -295,7 +295,7 @@ const UIComponents = {
 };
 ```
 
-#### 🚀 **js/weather-app.js** - Main Application Logic
+#### 🚀 **js/suhAI-app.js** - Main Application Logic
 ```javascript
 const WeatherApp = {
   init() {
@@ -331,7 +331,7 @@ const WeatherApp = {
 };
 ```
 
-#### 🔌 **js/weather-backend.js** - API Integration
+#### 🔌 **js/suhAI-backend.js** - API Integration
 ```javascript
 // API Configuration
 const WeatherAPIKey = "YOUR_API_KEY";
@@ -351,7 +351,7 @@ window.addEventListener("weather-updated", (event) => {
 });
 ```
 
-#### 🔍 **js/weather-search.js** - Search Functionality
+#### 🔍 **js/suhAI-search.js** - Search Functionality
 ```javascript
 // Search functionality
 const SearchManager = {
@@ -568,7 +568,7 @@ Anda bisa mengubah website ini secara manual hanya dengan editor teks (mis. VS C
   - Hover/animation: `.fade-in-up`, `.card-hover-enhanced`
 
 ### 3) Ubah Data Cuaca, Prediksi, dan Rekomendasi
-- Buka `js/weather-data.js`
+- Buka `js/suhAI-data.js`
 - Ubah objek berikut:
   - `WeatherData.current` → suhu, kondisi, UV, angin, dst.
   - `WeatherData.forecast` → daftar 7 hari (hari, suhu, ikon)
@@ -576,7 +576,7 @@ Anda bisa mengubah website ini secara manual hanya dengan editor teks (mis. VS C
 - Simpan, lalu refresh browser
 
 ### 4) Ubah Interaksi/Navigasi/Chart
-- Buka `js/weather-app.js`
+- Buka `js/suhAI-app.js`
 - Di file ini Anda bisa:
   - Mengatur scroll spy, smooth scrolling, dan sticky navbar
   - Membuat/merubah grafik suhu & presipitasi (komponen sederhana tanpa library)
@@ -588,14 +588,14 @@ Anda bisa mengubah website ini secara manual hanya dengan editor teks (mis. VS C
 - Quick actions bisa diubah pada `getQuickActionMessage`
 
 ## ⚙️ Kustomisasi Cepat (Checklist)
-- [ ] Ganti lokasi default (mis. `Jepara`) di `index.html` dan `weather-data.js`
+- [ ] Ganti lokasi default (mis. `Jepara`) di `index.html` dan `suhAI-data.js`
 - [ ] Ganti skema warna gradient di `.weather-gradient`
 - [ ] Ganti icon dan label di section navigasi (navbar & footer)
 - [ ] Perbarui teks rekomendasi kesehatan sesuai target user
 - [ ] Sesuaikan grid/kolom (desktop/tablet/mobile) di `index.html`
 
 ## 🔁 Cara Mengganti Data Dengan Mudah
-Contoh mengganti suhu dan kondisi saat ini (di `js/weather-data.js`):
+Contoh mengganti suhu dan kondisi saat ini (di `js/suhAI-data.js`):
 
 ```js
 WeatherData.current = {
@@ -649,7 +649,7 @@ Alternatif cepat:
 #### 2. **Data Cuaca Tidak Muncul**
 **Gejala**: Suhu dan kondisi cuaca tidak tampil
 **Solusi**:
-- Cek API key di `js/weather-backend.js`
+- Cek API key di `js/suhAI-backend.js`
 - Pastikan koneksi internet
 - Cek console browser untuk error API
 - Ganti ke kota lain untuk test
@@ -709,8 +709,8 @@ body {
 #### 8. **Search Tidak Berfungsi**
 **Gejala**: Pencarian kota tidak bekerja
 **Solusi**:
-- Cek API key di `js/weather-backend.js`
-- Pastikan `weather-search.js` ter-load
+- Cek API key di `js/suhAI-backend.js`
+- Pastikan `suhAI-search.js` ter-load
 - Cek console untuk error
 - Test dengan kota yang jelas (Jakarta, Surabaya)
 
@@ -756,10 +756,10 @@ fetch('https://api.weatherapi.com/v1/current.json?key=YOUR_KEY&q=Jakarta')
 #### 3. **Cek File Loading**
 ```html
 <!-- Pastikan semua script ter-load -->
-<script type="module" src="js/weather-data.js"></script>
-<script type="module" src="js/weather-app.js"></script>
-<script type="module" src="js/weather-backend.js"></script>
-<script type="module" src="js/weather-search.js"></script>
+<script type="module" src="js/suhAI-data.js"></script>
+<script type="module" src="js/suhAI-app.js"></script>
+<script type="module" src="js/suhAI-backend.js"></script>
+<script type="module" src="js/suhAI-search.js"></script>
 <script type="module" src="js/chat-ai.js"></script>
 ```
 
@@ -894,10 +894,10 @@ document.addEventListener('weather-updated', (e) => {
 #### 1. **Modular JavaScript Architecture**
 ```javascript
 // Setiap file memiliki tanggung jawab spesifik:
-weather-data.js    // Data management & UI components
-weather-app.js     // Main application logic
-weather-backend.js // API integration
-weather-search.js  // Search functionality
+suhAI-data.js      // Data management & UI components
+suhAI-app.js       // Main application logic
+suhAI-backend.js   // API integration
+suhAI-search.js    // Search functionality
 chat-ai.js         // AI chat assistant
 ```
 
@@ -971,7 +971,7 @@ User Input → Event Handler → API Call → Data Processing → UI Update
 
 #### 1. **Mengubah Data Cuaca**
 ```javascript
-// Di weather-data.js, ubah objek WeatherData:
+// Di suhAI-data.js, ubah objek WeatherData:
 WeatherData.current = {
     temperature: 30,        // Suhu dalam Celsius
     condition: "Cerah",     // Kondisi cuaca
@@ -988,7 +988,7 @@ WeatherData.current = {
 
 #### 2. **Menambah Rekomendasi Baru**
 ```javascript
-// Di weather-data.js, tambah ke array recommendations:
+// Di suhAI-data.js, tambah ke array recommendations:
 WeatherData.recommendations.push({
     category: "Aktivitas Olahraga",
     icon: "🏃‍♂️",
@@ -1219,7 +1219,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## 📞 Contact
 
 **Developer**: Izumi
-**Project Link**: [https://github.com/izumi/weather-dashboard](https://github.com/izumi/weather-dashboard)
+**Project Link**: [https://github.com/izumi/suhaI-dashboard](https://github.com/izumi/suhaI-dashboard)
 
 ## ✍️ Catatan
 - Proyek ini dirancang agar mudah diubah manual tanpa build tools

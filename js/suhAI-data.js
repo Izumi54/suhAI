@@ -1,4 +1,4 @@
-import { WeatherAPIKey } from "./weather-backend.js";
+import { WeatherAPIKey } from "./suhAI-backend.js";
 
 // Weather Data Management
 const WeatherData = {
@@ -430,7 +430,7 @@ const ChartManager = {
 
 // Initialize Application
 document.addEventListener("DOMContentLoaded", async function () {
-// Dengarkan event dari weather-backend.js
+// Dengarkan event dari suhAI-backend.js
 window.addEventListener("weather-updated", async (event) => {
   const { city, data } = event.detail;
   const pressure = data.current.pressure_mb;

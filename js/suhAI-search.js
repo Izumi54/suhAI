@@ -1,6 +1,6 @@
 // Weather Search Module
 // Modul ini mengelola input pencarian kota: saran (suggestions), riwayat, enter/click, dan navigasi keyboard
-// Ia akan memanggil weatherBackend.performSearch(city) yang sudah ada di weather-backend.js
+// Ia akan memanggil weatherBackend.performSearch(city) yang sudah ada di suhAI-backend.js
 
 (function() {
     // Elemen DOM yang digunakan (desktop + mobile)
@@ -100,7 +100,7 @@
             if (window.weatherBackend && typeof window.weatherBackend.performSearch === 'function') {
                 window.weatherBackend.performSearch(value);
             } else {
-                console.warn('weatherBackend belum siap. Pastikan weather-backend.js sudah dimuat.');
+                console.warn('weatherBackend belum siap. Pastikan suhAI-backend.js sudah dimuat.');
             }
         } finally {
             hideSuggestions();
