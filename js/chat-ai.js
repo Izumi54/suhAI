@@ -1,12 +1,15 @@
-// AI Chat Management
+// AI Chat Management dengan n8n Integration - DEBUG VERSION
 const ChatAI = {
     init() {
+        console.log('ChatAI.init() dipanggil');
         this.setupChatElements();
         this.setupEventListeners();
         this.showWelcomeMessage();
+        console.log('ChatAI initialized');
     },
-    
+
     setupChatElements() {
+        console.log('Setup chat elements...');
         this.elements = {
             chatToggle: document.getElementById('chatToggle'),
             chatWindow: document.getElementById('chatWindow'),
@@ -19,46 +22,202 @@ const ChatAI = {
             chatMessages: document.getElementById('chatMessages')
         };
         
+        // Log jika elemen tidak ditemukan
+        Object.entries(this.elements).forEach(([key, element]) => {
+            if (!element) {
+                console.warn(`Element ${key} tidak ditemukan`);
+            }
+        });
+        
         this.state = {
             isOpen: false,
             hasNewMessage: true,
-            isTyping: false
+            isTyping: false,
+            n8nEnabled: true
         };
+        console.log('Chat elements setup completed');
     },
-    
-    
-  setupEventListeners() {
-  const e = this.elements;
-  
-  // Toggle chat window
-  if (e.chatToggle) e.chatToggle.addEventListener('click', () => this.toggleChat());
 
-  // Minimize chat
-  if (e.minimizeChat) e.minimizeChat.addEventListener('click', () => this.closeChat());
-
-  // Send message
-  if (e.sendMessage) e.sendMessage.addEventListener('click', () => this.sendMessage());
-
-  // Enter key
-  if (e.chatInput) e.chatInput.addEventListener('keypress', (ev) => {
-    if (ev.key === 'Enter') this.sendMessage();
-  });
-
-
+    setupEventListeners() {
+        console.log('Setup event listeners...');
+        const e = this.elements;
         
+        if (e.chatToggle) {
+            e.chatToggle.addEventListener('click', () => {
+                console.log('Chat toggle diklik');
+                this.toggleChat();
+            });
+        }
+
+        if (e.sendMessage) {
+            e.sendMessage.addEventListener('click', () => {
+                console.log('Send button diklik');
+                this.sendMessage();
+            });
+        }
+
+        if (e.chatInput) {
+            e.chatInput.addEventListener('keypress', (ev) => {
+                if (ev.key === 'Enter') {
+                    console.log('Enter key ditekan');
+                    this.sendMessage();
+                }
+            });
+        }
+
         // Quick action buttons
         document.querySelectorAll('.quick-action-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const action = e.target.dataset.action;
+                console.log(`Quick action: ${action}`);
                 this.handleQuickAction(action);
             });
         });
         
-        // Auto-hide badge
-        this.setupBadgeAutoHide();
+        console.log('Event listeners setup completed');
     },
+
+    // ==================== n8n INTEGRATION ====================
     
+    async sendMessageToN8N(userMessage, context = {}) {
+        const n8nWebhookURL = 'http://localhost:5678/webhook/weather-chatbot';
+        
+        console.log('STEP 1: Mencoba konek ke n8n...');
+        console.log('URL:', n8nWebhookURL);
+        
+        const payload = {
+            message: userMessage,
+            userId: this.getUserId(),
+            location: window.WeatherData?.current?.location || 'Jepara',
+            currentWeather: window.WeatherData?.current || {},
+            timestamp: new Date().toISOString(),
+            ...context
+        };
+
+        console.log('STEP 2: Payload ke n8n:', payload);
+
+        try {
+            console.log('STEP 3: Melakukan fetch...');
+            const response = await fetch(n8nWebhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            console.log('STEP 4: Response status:', response.status);
+            console.log('STEP 5: Response ok:', response.ok);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            console.log('STEP 6: Parsing JSON response...');
+            const data = await response.json();
+            console.log('STEP 7: Response SUCCESS dari n8n:', data);
+            
+            if (data.success && data.data) {
+                return data.data.text;
+            } else {
+                throw new Error('Format response n8n tidak valid');
+            }
+            
+        } catch (error) {
+            console.error('STEP ERROR: n8n API Error:', error);
+            console.log('Fallback ke response lokal...');
+            return this.generateAIResponse(userMessage);
+        }
+    },
+
+    getUserId() {
+        let userId = localStorage.getItem('chatUserId');
+        if (!userId) {
+            userId = 'user_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('chatUserId', userId);
+        }
+        return userId;
+    },
+
+    // ==================== MODIFIED FUNCTIONS ====================
+
+    async sendMessage() {
+        console.log('sendMessage() DIPANGGIL');
+        
+        const message = this.elements.chatInput.value.trim();
+        console.log('Message:', message);
+        
+        if (!message) {
+            console.log('Message kosong, return');
+            return;
+        }
+
+        // Add user message
+        this.addMessage(message, 'user');
+        this.elements.chatInput.value = '';
+        console.log('User message ditambahkan');
+
+        // Show typing indicator
+        this.showTypingIndicator();
+        console.log('Typing indicator ditampilkan');
+
+        try {
+            let aiResponse;
+            
+            if (this.state.n8nEnabled) {
+                console.log('Menggunakan n8n...');
+                aiResponse = await this.sendMessageToN8N(message);
+            } else {
+                console.log('Menggunakan fallback local...');
+                aiResponse = this.generateAIResponse(message);
+            }
+            
+            this.hideTypingIndicator();
+            console.log('AI Response diterima:', aiResponse);
+            this.addMessage(aiResponse, 'ai');
+            
+        } catch (error) {
+            console.error('Error di sendMessage:', error);
+            this.hideTypingIndicator();
+            const fallbackResponse = this.generateAIResponse(message);
+            this.addMessage(fallbackResponse, 'ai');
+        }
+    },
+
+    async handleQuickAction(action) {
+        console.log('handleQuickAction:', action);
+        
+        const message = this.getQuickActionMessage(action);
+        this.addMessage(message, 'user');
+        
+        this.showTypingIndicator();
+        
+        try {
+            let aiResponse;
+            
+            if (this.state.n8nEnabled) {
+                aiResponse = await this.sendMessageToN8N(message, { quickAction: action });
+            } else {
+                aiResponse = this.generateAIResponse(message);
+            }
+            
+            this.hideTypingIndicator();
+            this.addMessage(aiResponse, 'ai');
+        } catch (error) {
+            console.error('Error di handleQuickAction:', error);
+            this.hideTypingIndicator();
+            const fallbackResponse = this.generateAIResponse(message);
+            this.addMessage(fallbackResponse, 'ai');
+        }
+    },
+
+    // ... (rest of the functions remain the same as previous version)
+    // Keep all the existing functions: toggleChat, openChat, closeChat, 
+    // addMessage, showTypingIndicator, hideTypingIndicator, etc.
+    
+    // TAMBAHKAN function yang mungkin missing:
     toggleChat() {
+        console.log('toggleChat dipanggil');
         this.state.isOpen = !this.state.isOpen;
         
         if (this.state.isOpen) {
@@ -69,6 +228,7 @@ const ChatAI = {
     },
     
     openChat() {
+        console.log('openChat dipanggil');
         this.elements.chatWindow.classList.remove('hidden');
         this.elements.chatIcon.classList.add('hidden');
         this.elements.closeIcon.classList.remove('hidden');
@@ -78,44 +238,15 @@ const ChatAI = {
     },
     
     closeChat() {
+        console.log('CloseChat dipanggil');
         this.elements.chatWindow.classList.add('hidden');
         this.elements.chatIcon.classList.remove('hidden');
         this.elements.closeIcon.classList.add('hidden');
         this.state.isOpen = false;
     },
-    
-    sendMessage() {
-        const message = this.elements.chatInput.value.trim();
-        if (!message) return;
-        
-        // Add user message
-        this.addMessage(message, 'user');
-        this.elements.chatInput.value = '';
-        
-        // Show typing indicator
-        this.showTypingIndicator();
-        
-        // Generate AI response
-        setTimeout(() => {
-            this.hideTypingIndicator();
-            const aiResponse = this.generateAIResponse(message);
-            this.addMessage(aiResponse, 'ai');
-        }, 1000 + Math.random() * 1000);
-    },
-    
-    handleQuickAction(action) {
-        const message = this.getQuickActionMessage(action);
-        this.addMessage(message, 'user');
-        
-        this.showTypingIndicator();
-        setTimeout(() => {
-            this.hideTypingIndicator();
-            const aiResponse = this.generateAIResponse(message);
-            this.addMessage(aiResponse, 'ai');
-        }, 1000);
-    },
-    
+
     addMessage(text, sender) {
+        console.log(`addMessage: ${sender} - ${text.substring(0, 50)}...`);
         const messageDiv = document.createElement('div');
         messageDiv.className = 'chat-message flex items-start space-x-2';
         
@@ -148,8 +279,9 @@ const ChatAI = {
             this.state.hasNewMessage = true;
         }
     },
-    
+
     showTypingIndicator() {
+        console.log('showTypingIndicator');
         if (this.state.isTyping) return;
         
         this.state.isTyping = true;
@@ -175,56 +307,21 @@ const ChatAI = {
         this.elements.chatMessages.appendChild(typingDiv);
         this.elements.chatMessages.scrollTop = this.elements.chatMessages.scrollHeight;
     },
-    
+
     hideTypingIndicator() {
+        console.log('hideTypingIndicator');
         const typingIndicator = document.getElementById('typingIndicator');
         if (typingIndicator) {
             typingIndicator.remove();
         }
         this.state.isTyping = false;
     },
-    
+
     generateAIResponse(userMessage) {
-        const responses = {
-            weather: [
-                `Saat ini suhu di Jepara adalah ${WeatherData.current.temperature}°C dengan kondisi ${WeatherData.current.condition.toLowerCase()}. Indeks UV sangat tinggi (${WeatherData.current.uvIndex}), jadi pastikan untuk menggunakan tabir surya jika keluar rumah! ☀️`,
-                `Cuaca hari ini cukup panas dengan suhu ${WeatherData.current.temperature}°C. Kelembapan ${WeatherData.current.humidity}% dan kecepatan angin ${WeatherData.current.windSpeed} km/jam. Disarankan untuk menghindari aktivitas luar ruangan antara pukul 11:00-15:00.`,
-                `Kondisi cuaca saat ini: ${WeatherData.current.temperature}°C, ${WeatherData.current.condition.toLowerCase()}. Terasa seperti ${WeatherData.current.feelsLike}°C karena kelembapan tinggi. Pastikan untuk minum air putih yang cukup! 💧`
-            ],
-            forecast: [
-                `Berikut prediksi cuaca 7 hari ke depan:\n• Hari ini: ${WeatherData.forecast[0].high}°C, ${WeatherData.forecast[0].condition}\n• Besok: ${WeatherData.forecast[1].high}°C, ${WeatherData.forecast[1].condition}\n• Sabtu: ${WeatherData.forecast[2].high}°C, ${WeatherData.forecast[2].condition}\n• Minggu: ${WeatherData.forecast[3].high}°C, ${WeatherData.forecast[3].condition}\n• Senin: ${WeatherData.forecast[4].high}°C, ${WeatherData.forecast[4].condition}\n• Selasa: ${WeatherData.forecast[5].high}°C, ${WeatherData.forecast[5].condition}\n• Rabu: ${WeatherData.forecast[6].high}°C, ${WeatherData.forecast[6].condition}\n\nSiapkan payung untuk akhir pekan! ☔`,
-                `Prediksi cuaca menunjukkan tren yang cukup stabil dengan suhu berkisar ${Math.min(...WeatherData.forecast.map(d => d.high))}-${Math.max(...WeatherData.forecast.map(d => d.high))}°C. Akan ada hujan ringan di akhir pekan, jadi rencanakan aktivitas outdoor dengan baik! 📅`
-            ],
-            recommendations: [
-                `Berdasarkan kondisi cuaca saat ini, berikut rekomendasi saya:\n\n💧 **Hidrasi**: Minum minimal 2-3 liter air per hari\n☀️ **Perlindungan**: Gunakan tabir surya SPF 30+ dan topi\n👕 **Pakaian**: Pilih bahan katun yang menyerap keringat\n🏠 **Rumah**: Pastikan ventilasi baik dan gunakan kipas angin\n\nHindari aktivitas berat di luar ruangan antara 11:00-15:00!`,
-                `Untuk kondisi cuaca panas seperti ini, saya sarankan:\n• Minum air putih setiap jam\n• Konsumsi buah-buahan kaya air\n• Gunakan pakaian longgar dan berwarna terang\n• Cari tempat teduh saat berada di luar\n\nStay hydrated! 💪`
-            ],
-            health: [
-                `Tips kesehatan untuk cuaca panas:\n\n🌡️ **Dehidrasi**: Waspada gejala pusing, lemas, dan mulut kering\n💊 **Suplemen**: Pertimbangkan elektrolit untuk mengganti mineral yang hilang\n🏃 **Olahraga**: Lakukan di pagi atau sore hari\n🍎 **Makanan**: Hindari makanan berat, pilih yang segar dan ringan\n\nJika merasa tidak enak badan, segera cari tempat teduh dan minum air!`,
-                `Kesehatan Anda penting! Dengan suhu ${WeatherData.current.temperature}°C dan indeks UV tinggi:\n• Gunakan topi lebar dan kacamata hitam\n• Aplikasikan tabir surya setiap 2 jam\n• Istirahat di tempat teduh setiap 30 menit\n• Perhatikan tanda-tanda heat stroke\n\nJaga kesehatan Anda! 🏥`
-            ],
-            default: [
-                "Saya bisa membantu Anda dengan informasi cuaca, prediksi 7 hari, rekomendasi kesehatan, dan tips untuk kondisi cuaca saat ini. Ada yang spesifik ingin Anda tanyakan? 😊",
-                "Halo! Saya SuhAI Assistant. Saya bisa memberikan informasi cuaca terkini, prediksi, dan saran kesehatan berdasarkan kondisi cuaca. Bagaimana saya bisa membantu Anda hari ini? 🌤️",
-                "Saya di sini untuk membantu! Anda bisa bertanya tentang cuaca hari ini, prediksi minggu depan, atau tips kesehatan untuk kondisi cuaca panas. Apa yang ingin Anda ketahui? 💡"
-            ]
-        };
-        
-        const message = userMessage.toLowerCase();
-        
-        if (message.includes('cuaca') || message.includes('hari ini')) {
-            return responses.weather[Math.floor(Math.random() * responses.weather.length)];
-        } else if (message.includes('prediksi') || message.includes('7 hari') || message.includes('besok')) {
-            return responses.forecast[Math.floor(Math.random() * responses.forecast.length)];
-        } else if (message.includes('rekomendasi') || message.includes('saran') || message.includes('tips')) {
-            return responses.recommendations[Math.floor(Math.random() * responses.recommendations.length)];
-        } else if (message.includes('kesehatan') || message.includes('sehat') || message.includes('dehidrasi')) {
-            return responses.health[Math.floor(Math.random() * responses.health.length)];
-        } else {
-            return responses.default[Math.floor(Math.random() * responses.default.length)];
-        }
+        console.log('generateAIResponse fallback');
+        return "Maaf, saya sedang offline. Silakan coba lagi nanti.";
     },
-    
+
     getQuickActionMessage(action) {
         const messages = {
             weather: "Bagaimana cuaca hari ini?",
@@ -234,9 +331,8 @@ const ChatAI = {
         };
         return messages[action] || "Halo!";
     },
-    
+
     showWelcomeMessage() {
-        // Show welcome message after 3 seconds
         setTimeout(() => {
             if (!this.state.isOpen) {
                 this.elements.chatBadge.classList.remove('hidden');
@@ -244,7 +340,7 @@ const ChatAI = {
             }
         }, 3000);
     },
-    
+
     setupBadgeAutoHide() {
         setInterval(() => {
             if (this.state.hasNewMessage && !this.state.isOpen) {
@@ -262,6 +358,7 @@ const ChatAI = {
 // Export for global access
 window.ChatAI = ChatAI;
 document.addEventListener('DOMContentLoaded', () => {
-  ChatAI.init();
+    console.log('DOM Content Loaded - Initializing ChatAI...');
+    ChatAI.init();
 });
 
