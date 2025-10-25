@@ -496,7 +496,7 @@ window.addEventListener("weather-updated", async (event) => {
   setTimeout(() => {
     window.ChartManager.createTemperatureChart("temperatureChart");
     window.ChartManager.createPrecipitationChart("precipitationChart");
-    console.log("🎨 Update grafik dipanggil:", WeatherData.forecast);
+    console.log("Update grafik dipanggil:", WeatherData.forecast);
 
   }, 300);
 
