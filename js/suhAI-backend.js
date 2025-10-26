@@ -35,13 +35,13 @@ class WeatherBackend {
     const searchInput = document.getElementById("weatherSearch");
     const searchBtn = document.getElementById("searchBtn");
     const locationBtn = document.getElementById("locationBtn");
-    const refreshBtn = document.getElementById("refreshBtn");
+    // const refreshBtn = document.getElementById("refreshBtn");
 
     // Mobile search
     const mobileSearchInput = document.getElementById("mobileWeatherSearch");
     const mobileSearchBtn = document.getElementById("mobileSearchBtn");
     const mobileLocationBtn = document.getElementById("mobileLocationBtn");
-    const mobileRefreshBtn = document.getElementById("mobileRefreshBtn");
+    // const mobileRefreshBtn = document.getElementById("mobileRefreshBtn");
 
     //layer cuaca map
 const layerTemp = document.getElementById("layerTemp");
@@ -75,11 +75,11 @@ if (layerWind) layerWind.addEventListener("change", (e) => this.toggleLayer("win
       });
     }
 
-    if (refreshBtn) {
-      refreshBtn.addEventListener("click", () => {
-        this.refreshWeather();
-      });
-    }
+    // if (refreshBtn) {
+    //   refreshBtn.addEventListener("click", () => {
+    //     this.refreshWeather();
+    //   });
+    // }
 
     // Mobile event listeners
     if (mobileSearchInput) {
@@ -102,11 +102,11 @@ if (layerWind) layerWind.addEventListener("change", (e) => this.toggleLayer("win
       });
     }
 
-    if (mobileRefreshBtn) {
-      mobileRefreshBtn.addEventListener("click", () => {
-        this.refreshWeather();
-      });
-    }
+    // if (mobileRefreshBtn) {
+    //   mobileRefreshBtn.addEventListener("click", () => {
+    //     this.refreshWeather();
+    //   });
+    // }
   }
 
   async performSearch(city) {
@@ -459,21 +459,21 @@ cleanupHeatmapCanvas() {
   }
   
 
-  async refreshWeather() {
-    if (this.currentCity) {
-      try {
-        this.showLoading();
-        const weatherData = await this.getWeatherData(this.currentCity);
-        this.updateWeatherDisplay(weatherData);
-        this.hideLoading();
-      } catch (error) {
-        console.error("Refresh error:", error);
-        this.showError("Gagal memperbarui data cuaca");
-      }
-    } else {
-      this.showError("Tidak ada kota yang dipilih untuk di-refresh");
-    }
-  }
+  // async refreshWeather() {
+  //   if (this.currentCity) {
+  //     try {
+  //       this.showLoading();
+  //       const weatherData = await this.getWeatherData(this.currentCity);
+  //       this.updateWeatherDisplay(weatherData);
+  //       this.hideLoading();
+  //     } catch (error) {
+  //       console.error("Refresh error:", error);
+  //       this.showError("Gagal memperbarui data cuaca");
+  //     }
+  //   } else {
+  //     this.showError("Tidak ada kota yang dipilih untuk di-refresh");
+  //   }
+  // }
 
   addToHistory(city) {
     let history = JSON.parse(
