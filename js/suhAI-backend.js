@@ -459,21 +459,21 @@ cleanupHeatmapCanvas() {
   }
   
 
-  // async refreshWeather() {
-  //   if (this.currentCity) {
-  //     try {
-  //       this.showLoading();
-  //       const weatherData = await this.getWeatherData(this.currentCity);
-  //       this.updateWeatherDisplay(weatherData);
-  //       this.hideLoading();
-  //     } catch (error) {
-  //       console.error("Refresh error:", error);
-  //       this.showError("Gagal memperbarui data cuaca");
-  //     }
-  //   } else {
-  //     this.showError("Tidak ada kota yang dipilih untuk di-refresh");
-  //   }
-  // }
+  async refreshWeather() {
+    if (this.currentCity) {
+      try {
+        this.showLoading();
+        const weatherData = await this.getWeatherData(this.currentCity);
+        this.updateWeatherDisplay(weatherData);
+        this.hideLoading();
+      } catch (error) {
+        console.error("Refresh error:", error);
+        this.showError("Gagal memperbarui data cuaca");
+      }
+    } else {
+      this.showError("Tidak ada kota yang dipilih untuk di-refresh");
+    }
+  }
 
   addToHistory(city) {
     let history = JSON.parse(
