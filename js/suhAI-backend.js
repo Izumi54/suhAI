@@ -790,14 +790,16 @@ getLayerColor(type) {
 document.addEventListener("DOMContentLoaded", () => {
   window.weatherBackend = new WeatherBackend();
 
-setInterval(async () => {
-  if (window.weatherBackend?.currentCity) {
-    console.log(`Memperbarui heatmap ${window.weatherBackend.currentCity}`);
-    await window.weatherBackend.refreshWeather();
+  setInterval(async () => {
+    if (window.weatherBackend?.currentCity) {
+      console.log(`Memperbarui heatmap ${window.weatherBackend.currentCity}`);
+      await window.weatherBackend.refreshWeather();
+    }
+  },  60000); // setiap 5 menit
+  setInterval(()=>{
     for (const type of window.weatherBackend.activeLayers) {
       window.weatherBackend.updateWeatherLayer(type, window.weatherBackend.currentCityData);
     }
-  }
-},  60000); // setiap 5 menit
+  }, 1*60*10000);
 
 });

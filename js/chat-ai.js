@@ -80,7 +80,7 @@ const ChatAI = {
     // ==================== n8n INTEGRATION ====================
     
     async sendMessageToN8N(userMessage, context = {}) {
-        const n8nWebhookURL = 'http://localhost:5678/webhook/weather-chatbot';
+        const n8nWebhookURL = 'https://izumi54.app.n8n.cloud/webhook/chat-bot-suhAI';
         
         console.log('STEP 1: Mencoba konek ke n8n...');
         console.log('URL:', n8nWebhookURL);

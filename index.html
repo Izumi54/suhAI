@@ -42,14 +42,15 @@
   </head>
   <body class="overflow-x-hidden">
     <!-- Navigation Header -->
-    <nav
-      class="glassmorphism-light rounded-b-2xl fixed left-4 right-4 top-4 px-6 py-4 z-50 backdrop-blur-xl"
-    >
+    <nav class="glassmorphism-light rounded-b-2xl fixed left-4 right-4 top-4 px-6 py-4 z-50 backdrop-blur-xl">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <div
+          <img src="../suhAI/assest/logo.png" alt="Logo" class="w-11 h-11">
+          <!-- <img src="../suhAI/assest/logo_text.png" alt="Logo" class="w-20 h-8"> -->
+          <!-- <div
             class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
           >
+            
             <svg
               class="w-6 h-6 text-mode"
               fill="currentColor"
@@ -59,9 +60,9 @@
                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
               />
             </svg>
-          </div>
+          </div> -->
           <div>
-            <h1 class="text-mode text-xl font-bold">SuhAI</h1>
+            <img src="../suhAI/assest/logo_text.png" alt="Logo" class="w-20 h-8">
             <p id="textKecil" class="text-mode text-sm opacity-80">Jepara</p>
           </div>
         </div>
@@ -960,8 +961,50 @@
               </div>
             </div>
 
+            
+
             <!-- Mobile Legend -->
             <div class="glassmorphism-light rounded-2xl p-4">
+              <!-- Weather Layers -->
+              <div class="mb-6">
+                <label class="text-mode text-sm font-semibold mb-3 block"
+                  >Layer Cuaca</label
+                >
+                <div class="space-y-3">
+                  <label class="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="layerTemp"
+                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                    />
+                    <span class="text-mode text-sm">Suhu</span>
+                  </label>
+                  <label class="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="layerHumidity"
+                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                    />
+                    <span class="text-mode text-sm">Kelembapan</span>
+                  </label>
+                  <label class="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="layerUV"
+                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                    />
+                    <span class="text-mode text-sm">Indeks UV</span>
+                  </label>
+                  <label class="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="layerWind"
+                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                    />
+                    <span class="text-mode text-sm">Kecepatan Angin</span>
+                  </label>
+                </div>
+              </div>
               <div class="text-mode text-sm font-semibold mb-3">
                 Legenda Suhu
               </div>
