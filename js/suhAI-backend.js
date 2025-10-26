@@ -1,9 +1,9 @@
 // Weather Backend - Based on friend's script.js
 // Robust weather functionality with proper error handling
-export const WeatherAPIKey = "ec86397cb0624a28b0b153411251410";
+export const WeatherAPIKey = "10d801c215024798a2e62048252610";
 class WeatherBackend {
   constructor() {
-    this.API_KEY = "ec86397cb0624a28b0b153411251410";
+    this.API_KEY = "10d801c215024798a2e62048252610";
     this.currentTempC = null;
     this.showingCelsius = true;
     this.currentCity = "";

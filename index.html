@@ -878,7 +878,7 @@
 
 
                 <!-- Map Stats -->
-                <div class="grid grid-cols-4 gap-4">
+                <!-- <div class="grid grid-cols-4 gap-4">
                   <div class="glassmorphism-light rounded-2xl p-4 text-center">
                     <div class="text-mode text-sm opacity-80 mb-1">
                       Suhu Rata-rata
@@ -903,7 +903,7 @@
                     </div>
                     <div class="text-mode text-sm font-bold">2 menit lalu</div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -946,7 +946,7 @@
             </div>
 
             <!-- Mobile Controls -->
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <!-- <div class="grid grid-cols-2 gap-4 mb-4">
               <div class="glassmorphism-light rounded-2xl p-4">
                 <div class="text-mode text-sm font-semibold mb-2">
                   Suhu Rata-rata
@@ -959,52 +959,51 @@
                 </div>
                 <div class="text-mode text-2xl font-bold">38°C</div>
               </div>
-            </div>
+            </div> -->
 
             
-
+            <!-- Weather Layers -->
+            <div class="mb-6">
+              <label class="text-mode text-sm font-semibold mb-3 block"
+                >Layer Cuaca</label
+              >
+              <div class="space-y-3">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="layerTemp"
+                    class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                  />
+                  <span class="text-mode text-sm">Suhu</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="layerHumidity"
+                    class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                  />
+                  <span class="text-mode text-sm">Kelembapan</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="layerUV"
+                    class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                  />
+                  <span class="text-mode text-sm">Indeks UV</span>
+                </label>
+                <label class="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="layerWind"
+                    class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
+                  />
+                  <span class="text-mode text-sm">Kecepatan Angin</span>
+                </label>
+              </div>
+            </div>
             <!-- Mobile Legend -->
             <div class="glassmorphism-light rounded-2xl p-4">
-              <!-- Weather Layers -->
-              <div class="mb-6">
-                <label class="text-mode text-sm font-semibold mb-3 block"
-                  >Layer Cuaca</label
-                >
-                <div class="space-y-3">
-                  <label class="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      id="layerTemp"
-                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
-                    />
-                    <span class="text-mode text-sm">Suhu</span>
-                  </label>
-                  <label class="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      id="layerHumidity"
-                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
-                    />
-                    <span class="text-mode text-sm">Kelembapan</span>
-                  </label>
-                  <label class="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      id="layerUV"
-                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
-                    />
-                    <span class="text-mode text-sm">Indeks UV</span>
-                  </label>
-                  <label class="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      id="layerWind"
-                      class="w-4 h-4 text-blue-600 bg-transparent border-mode rounded focus:ring-blue-500"
-                    />
-                    <span class="text-mode text-sm">Kecepatan Angin</span>
-                  </label>
-                </div>
-              </div>
               <div class="text-mode text-sm font-semibold mb-3">
                 Legenda Suhu
               </div>
